@@ -89,7 +89,7 @@ first.prototype.update = function() {
 }
 
 character = function(){
-	Phaser.Sprite.call(this,game,w2,h2+50,'rect')
+	Phaser.Sprite.call(this,game,w2,h2+25,'rect_l')
 	this.side=[w-100,100]
 	this.anchor.y=1
 	this.number_side=1
@@ -119,8 +119,8 @@ character = function(){
 	this.button3.alpha=0
 	this.random_list=[1,2,3,4,5,6]
 
-	this.ghost_player = game.add.emitter(this.x, this.y-50, 200)
-	this.ghost_player.makeParticles("rect")
+	this.ghost_player = game.add.emitter(this.x, this.y-25, 200)
+	this.ghost_player.makeParticles("rect_l")
 	this.ghost_player.minParticleSpeed.setTo(-0,-0)
 	this.ghost_player.maxParticleSpeed.setTo(0,0)
 	this.ghost_player.setAlpha(.1, .2)
@@ -147,7 +147,7 @@ character.prototype = Object.create(Phaser.Sprite.prototype)
 character.prototype.constructor = character
 
 character.prototype.move = function() {
-	this.time_move=1000*(Math.random(400,900))
+	this.time_move=1000*(Math.random(600,1900))
 	this.calculate_side()
 	this.tween_characteristic = game.add.tween(this).to({x:this.sidex},this.time_move,Phaser.Easing.Linear.None,true,0)
 	this.tween_characteristic.onComplete.add(this.move,this)
@@ -214,14 +214,17 @@ character.prototype.reset_tween = function() {
 	console.log('this.flag_repulserest',this.flag_repulse)
 }
 character.prototype.enerve = function() {
+this.random_enerve=1000*(Math.random(100,900))
+	if(this.random_enerve > 600){
+console.log('this.flag_enerve',this.flag_enerve)
+if(this.flag_enerve){
+	this.flag_enerve=false
 	console.log('this.flag_enerve',this.flag_enerve)
-	if(this.flag_enerve){
-		this.flag_enerve=false
-		console.log('this.flag_enerve',this.flag_enerve)
-		this.tween_enerve = game.add.tween(this).to({y:this.y-300},500,Phaser.Easing.Bounce.In,true,0)
-		this.tween_enerve.yoyo(500,true)
-		game.time.events.add( 1000,this.reset_flag_enerve,this )
-	}
+	this.tween_enerve = game.add.tween(this).to({y:this.y-300},500,Phaser.Easing.Bounce.In,true,0)
+	this.tween_enerve.yoyo(500,true)
+	game.time.events.add( 1000,this.reset_flag_enerve,this )
+}
+}
 }
 
 character.prototype.reset_flag_enerve = function() {
@@ -241,7 +244,7 @@ character.prototype.update=function(){
 			this.score.text=this.number
 		}
 	}
-	this.ghost_player.y=this.y-50
+	this.ghost_player.y=this.y-25
 	this.ghost_player.x=this.x
 	if (this.rightKey.isDown){
 		this.repulse_to_left() 
@@ -357,9 +360,9 @@ var preloadstate = {
 		loadingBar.anchor.setTo(0.5,0.5);
 		this.load.setPreloadSprite(loadingBar);
 		//spritesheet
-		this.game.load.spritesheet("sprite_paper","assets/paper.png",210,210,8);
 		//images
 		this.game.load.image("effect","assets/effect.png");
+		this.game.load.image("rect_l","assets/rect_l.png");
 		this.game.load.image("rect","assets/rect.png");
 		this.game.load.image("button","assets/button.png");
 		this.game.load.image("background","assets/background.png");
