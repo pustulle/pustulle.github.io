@@ -100,7 +100,7 @@ character = function(){
 	this.flag_enerve=true
 	this.flag_update=true
 	this.flag_restart=false
-	this.time_repulse=100
+	this.time_repulse=60
 	this.count_for_die=3
 	game.time.events.add( 1000,this.move,this )
 
