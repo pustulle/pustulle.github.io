@@ -1,10 +1,9 @@
-	var ratio_device=window.screen.width/window.screen.height
-		var h=1920*ratio_device
-		var w=1920
+var ratio_device=window.screen.height/window.screen.width
+var h=1280*ratio_device
+var w=1280
 
 var h2=h*.5
-var w2=1920*.5
-var w=1920
+var w2=w*.5
 
 opponent = function(){
 	Phaser.Sprite.call(this,game,-100,550,"button")
@@ -405,7 +404,7 @@ var game_state = {
 	},
 }
 
-game = new Phaser.Game(1920,h,Phaser.CANVAS,'' )
+game = new Phaser.Game(1280,h,Phaser.CANVAS,'' )
 game.state.add('boot',bootstate)
 game.state.add('preload',preloadstate)
 game.state.add('game_first_screen',game_first_screen)
