@@ -147,7 +147,9 @@ character.prototype = Object.create(Phaser.Sprite.prototype)
 character.prototype.constructor = character
 
 character.prototype.move = function() {
-	this.time_move=1000*(Math.random(600,1900))
+	this.time_move=game.rnd.integerInRange(500,2000)
+	//this.time_move=1000*(Math.random(60000,90000))
+	console.log(this.time_move,"tm");
 	this.calculate_side()
 	this.tween_characteristic = game.add.tween(this).to({x:this.sidex},this.time_move,Phaser.Easing.Linear.None,true,0)
 	this.tween_characteristic.onComplete.add(this.move,this)
