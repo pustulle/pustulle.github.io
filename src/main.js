@@ -132,13 +132,13 @@ character = function(){
 	this.ghost_player.on=true
 	this.ghost_player.start(true, 80, 50)
 
-	this.score = game.add.bitmapText(960,360,'lucky',"400",60)
+	this.score = game.add.bitmapText(w2,360,'lucky',"400",60)
 	this.number=10
 	this.score.text=this.number
 	this.score.anchor.setTo(.5,.5)
 
-	this.life=game.add.bitmapText(960,460,'lucky',"3",30)
-	this.game_over=game.add.bitmapText(960,h2,'lucky_red',"game over",100)
+	this.life=game.add.bitmapText(w2,460,'lucky',"3",30)
+	this.game_over=game.add.bitmapText(w2,h2,'lucky_red',"game over",100)
 	this.game_over.anchor.setTo(.5,.5)
 	this.game_over.visible=false
 	this.life.anchor.setTo(.5,.5)
