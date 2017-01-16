@@ -1,9 +1,10 @@
-	var ratio_device=window.screen.width/window.screen.height
-		var h=1920/ratio_device
+	//var ratio_device=window.screen.width/window.screen.height
+		var h=1280
+		//var h=1920/ratio_device
 
 var h2=h*.5
-var w2=1960*.5
-var w=1960
+var w2=1920*.5
+var w=1920
 
 opponent = function(){
 	Phaser.Sprite.call(this,game,-100,550,"button")
@@ -132,13 +133,13 @@ character = function(){
 	this.ghost_player.on=true
 	this.ghost_player.start(true, 80, 50)
 
-	this.score = game.add.bitmapText(640,660,'lucky',"400",60)
+	this.score = game.add.bitmapText(960,360,'lucky',"400",60)
 	this.number=10
 	this.score.text=this.number
 	this.score.anchor.setTo(.5,.5)
 
-	this.life=game.add.bitmapText(640,760,'lucky',"3",30)
-	this.game_over=game.add.bitmapText(640,h2,'lucky_red',"game over",100)
+	this.life=game.add.bitmapText(960,460,'lucky',"3",30)
+	this.game_over=game.add.bitmapText(960,h2,'lucky_red',"game over",100)
 	this.game_over.anchor.setTo(.5,.5)
 	this.game_over.visible=false
 	this.life.anchor.setTo(.5,.5)
@@ -345,7 +346,7 @@ var bootstate= {
 		this.load.image("loading","assets/loading.png"); 
 	},
 	create: function(){
-		this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
+		this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
 		this.scale.pageAlignHorizontally = true
 		this.scale.pageAlignVertically = true
 		this.scale.refresh()
@@ -404,7 +405,7 @@ var game_state = {
 	},
 }
 
-game = new Phaser.Game(1920,h,Phaser.CANVAS,'' )
+game = new Phaser.Game(1920,1280,Phaser.CANVAS,'' )
 game.state.add('boot',bootstate)
 game.state.add('preload',preloadstate)
 game.state.add('game_first_screen',game_first_screen)
