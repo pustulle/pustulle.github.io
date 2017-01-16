@@ -1,5 +1,6 @@
-var ratio_device=window.screen.width/window.screen.height
-var h=1280/ratio_device
+	var ratio_device=window.screen.width/window.screen.height
+		var h=1280/ratio_device
+
 var h2=h*.5
 var w2=1280*.5
 var w=1280
