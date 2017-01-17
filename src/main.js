@@ -96,8 +96,10 @@ character = function(){
 	this.number_side=1
 	this.leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
 	this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-	this.flag_repulse=true
+	this.flag_repulse_right=true
+	this.flag_repulse_left=true
 	this.flag_effect=true
+	this.flag_random_effect=false
 	this.flag_enerve=true
 	this.flag_update=true
 	this.flag_restart=false
@@ -149,7 +151,6 @@ character.prototype.constructor = character
 
 character.prototype.move = function() {
 	this.time_move=game.rnd.integerInRange(500,2000)
-	//this.time_move=1000*(Math.random(60000,90000))
 	console.log(this.time_move,"tm");
 	this.calculate_side()
 	this.tween_characteristic = game.add.tween(this).to({x:this.sidex},this.time_move,Phaser.Easing.Linear.None,true,0)
@@ -165,44 +166,73 @@ character.prototype.calculate_side = function() {
 }
 
 character.prototype.repulse_to_right = function() {
+if(this.flag_random_effect){
+	this.flag_repulse_right && this.show_little_effect_left()
+
+}else{
 	console.log('repulse_to_right')
-	if(this.flag_repulse){
+	if(this.flag_repulse_right){
 		this.show_effect_left()
-		console.log('repulse_to_right',this.flag_repulse)
 		if (this.x > this.button1.x && this.x < 500) {
-			this.flag_repulse=false
+			this.flag_repulse_right=false
 			this.stop_move()	
 			this.tween_repulse_to_right = game.add.tween(this).to({x:800},this.time_repulse,Phaser.Easing.Linear.None,true,0)
-			this.tween_repulse_to_right.onComplete.add(this.reset_tween,this)
+			this.tween_repulse_to_right.onComplete.add(this.reset_flag_repulse_right,this)
 		}
 	}
+}
 }
 character.prototype.repulse_to_left = function() {
-	if(this.flag_repulse){
+if(this.flag_random_effect){
+	this.flag_repulse_left && this.show_little_effect_right()
+
+}else{
+	if(this.flag_repulse_left){
 		this.show_effect_right()
-		console.log('this.flag_repulse',this.flag_repulse)
 		if (this.x < this.button2.x && this.x > w-500) {
-			this.flag_repulse=false
+			this.flag_repulse_left=false
 			this.stop_move()	
 			this.tween_repulse_to_left = game.add.tween(this).to({x:w-800},this.time_repulse,Phaser.Easing.Linear.None,true,0)
-			this.tween_repulse_to_left.onComplete.add(this.reset_tween,this)
+			this.tween_repulse_to_left.onComplete.add(this.reset_flag_repulse_left,this)
 		}
 	}
 }
+}
+
 character.prototype.show_effect_right = function() {
+
 	if (this.flag_effect){
-		this.flag_effect=false
+	this.flag_effect=false
 		this.tween_effect2=game.add.tween(this.button2.effect).to({alpha:.5},this.time_repulse,Phaser.Easing.Bounce.Out,true,0)
 		this.tween_effect2.yoyo(this.time_repulse,true)
-		this.tween_effect2.onComplete.add(this.reset_flag_effect,this)
+	this.tween_effect2.onComplete.add(this.reset_flag_effect,this)
 	}
 }
 character.prototype.show_effect_left = function() {
 	if (this.flag_effect){
-		this.flag_effect=false
+	this.flag_effect=false
 		this.tween_effect1=game.add.tween(this.button1.effect).to({alpha:.5},this.time_repulse,Phaser.Easing.Bounce.Out,true,0)
 		this.tween_effect1.yoyo(this.time_repulse,true)
-		this.tween_effect1.onComplete.add(this.reset_flag_effect,this)
+	this.tween_effect1.onComplete.add(this.reset_flag_effect,this)
+	}
+}
+
+character.prototype.show_little_effect_right = function() {
+	if (this.flag_effect){
+	this.flag_effect=false
+
+		this.tween_effect3=game.add.tween(this.button2.effect).to({alpha:.2},this.time_repulse,Phaser.Easing.Bounce.Out,true,0)
+		this.tween_effect3.yoyo(this.time_repulse,true)
+		this.tween_effect3.onComplete.add(this.reset_flag_effect,this)
+	}
+}
+character.prototype.show_little_effect_left = function() {
+	if (this.flag_effect){
+	this.flag_effect=false
+
+		this.tween_effect4=game.add.tween(this.button1.effect).to({alpha:.2},this.time_repulse,Phaser.Easing.Bounce.Out,true,0)
+		this.tween_effect4.yoyo(this.time_repulse,true)
+		this.tween_effect4.onComplete.add(this.reset_flag_effect,this)
 	}
 }
 
@@ -210,16 +240,39 @@ character.prototype.reset_flag_effect = function() {
 	this.flag_effect=true
 }
 
-character.prototype.reset_tween = function() {
-	this.enerve()
-	this.move()
-	this.flag_repulse=true
-	console.log('this.flag_repulserest',this.flag_repulse)
+character.prototype.reset_flag_repulse_right = function() {
+	this.reset_aspect()
+	this.flag_repulse_right=true
 }
-character.prototype.enerve = function() {
-this.random_enerve=1000*(Math.random(100,900))
-	if(this.random_enerve > 600){
-console.log('this.flag_enerve',this.flag_enerve)
+character.prototype.reset_flag_repulse_left = function() {
+	this.reset_aspect()
+	this.flag_repulse_left=true
+}
+
+character.prototype.reset_aspect=function(){
+	this.scale.setTo(1,1)
+	this.alpha=1
+	this.random_effect()
+}
+
+character.prototype.random_effect=function(){
+
+this.random_effect_generate=game.rnd.integerInRange(0,10)
+	console.log(this.random_effect_generate,"random_effect_generate");
+switch(this.random_effect_generate){
+	case 0:
+		console.log(0);
+		break
+	case 1:
+		this.jump_enerve()
+		console.log(1);
+		break
+	default:
+		this.move();
+}
+}
+//enerve est le seul qui dispose de son drapeau car on doit permettre son action pendant le jeu
+character.prototype.jump_enerve = function() {
 if(this.flag_enerve){
 	this.flag_enerve=false
 	console.log('this.flag_enerve',this.flag_enerve)
@@ -228,13 +281,22 @@ if(this.flag_enerve){
 	game.time.events.add( 1000,this.reset_flag_enerve,this )
 }
 }
-}
 
 character.prototype.reset_flag_enerve = function() {
 	console.log('reset')
 	this.y=0
 	this.flag_enerve=true	
 }
+
+//mouvements speciaux
+character.prototype.enerve = function() {
+this.flag_random_effect=true	
+	//onComplete > this.flag_random_effect=false
+}
+
+
+
+
 
 character.prototype.stop_move = function() {
 	this.tween_characteristic.stop()	
