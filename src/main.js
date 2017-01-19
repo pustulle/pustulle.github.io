@@ -523,7 +523,7 @@ var game_state = {
 		game.add.existing(this.game)
 		this.game.alpha=.8
 		this.filter=game.add.sprite(0,0,'filter')
-		this.filter.alpha=.03
+		this.filter.alpha=.08
 //this.tween_filter=game.add.tween(this.filter).to({y:20},100,Phaser.Easing.Linear.None,true,0,-1)
 //this.tween_filter.yoyo(100,true)
 		
