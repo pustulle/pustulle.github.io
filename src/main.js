@@ -105,8 +105,9 @@ character = function(){
 	this.flag_restart=false
 	this.flag_move=true
 	this.time_repulse=60
-	this.time_move_to_center=800
-	this.time_move_to_an_opposite_direction=3000
+	this.time_move_to_center=400
+	this.time_move_to_an_opposite_direction=400
+	this.time_enerve=400
 	this.count_for_die=3
 	game.time.events.add( 1000,() => this.move(0),this )
 
@@ -320,8 +321,8 @@ character.prototype.reset_flag_enerve = function() {
 character.prototype.enerve = function() {
 	//this.flag_random_effect=true	
 	console.log("il est énervé");
-	this.tween_enerve0=game.add.tween(this.scale).to({x:1.5,y:1},2000,Phaser.Easing.Linear.None,true)
-	this.tween_enerve1=game.add.tween(this).to({y:100},2000,Phaser.Easing.Linear.None,true)
+	this.tween_enerve0=game.add.tween(this.scale).to({x:1.5,y:1},this.time_enerve,Phaser.Easing.Linear.None,true)
+	this.tween_enerve1=game.add.tween(this).to({y:100},this.time_enerve,Phaser.Easing.Linear.None,true)
 	this.tween_enerve1.onComplete.add(function(){this.flag_move=true})
 	this.tween_enerve1.onComplete.add(() => this.move(1),this)
 	//this.tween_enerve0.chain(this.tween_enerve1)	
@@ -400,11 +401,11 @@ character.prototype.die = function() {
 	if (this.count_for_die>=1){
 		this.life.text=this.count_for_die
 		this.visible=false	
-		this.particle = game.add.emitter(this.x, this.y-50, 200)
+		this.particle = game.add.emitter(this.x, this.y-28, 200)
 		this.particle.makeParticles("rect")
 		this.particle.minParticleSpeed.setTo(-600,-600)
 		this.particle.maxParticleSpeed.setTo(800,800)
-		this.particle.setAlpha(.5, .8)
+		this.particle.setAlpha(.2, .6)
 		this.particle.minParticleScale = .5
 		this.particle.maxParticleScale = .5
 		this.particle.minRotation = 0
@@ -523,7 +524,7 @@ var game_state = {
 		game.add.existing(this.game)
 		this.game.alpha=.8
 		this.filter=game.add.sprite(0,0,'filter')
-		this.filter.alpha=.08
+		this.filter.alpha=.5
 //this.tween_filter=game.add.tween(this.filter).to({y:20},100,Phaser.Easing.Linear.None,true,0,-1)
 //this.tween_filter.yoyo(100,true)
 		
