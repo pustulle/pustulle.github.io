@@ -124,7 +124,8 @@ character = function(){
 	this.button3.anchor.setTo(.5,.5)
 	this.button3.alpha=0
 	this.random_list=[1,2,3,4,5,6]
-
+this.filter=game.add.sprite(0,0,'filter')
+	this.filter.alpha=.5
 	this.ghost_player = game.add.emitter(this.x, this.y-25, 200)
 	this.ghost_player.makeParticles("rect_l")
 	this.ghost_player.minParticleSpeed.setTo(-0,-0)
@@ -484,6 +485,7 @@ var preloadstate = {
 		this.load.setPreloadSprite(loadingBar);
 		//spritesheet
 		//images
+		this.game.load.image("filter","assets/filter.png");
 		this.game.load.image("effect","assets/effect.png");
 		this.game.load.image("rect_l","assets/rect_l.png");
 		this.game.load.image("rect","assets/rect.png");
