@@ -103,7 +103,7 @@ character = function(){
 	this.flag_enerve=true
 	this.flag_on_life=true
 	this.flag_cant_moving=true
-	this.time_repulse=60
+	this.time_repulse=40
 	this.time_move_to_center=400
 	this.time_move_to_an_opposite_direction=600
 	this.time_enerve=400
@@ -525,7 +525,7 @@ var bootstate= {
 		this.load.image("loading","assets/loading.png"); 
 	},
 	create: function(){
-		this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
+		this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
 		//this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
 		this.scale.pageAlignHorizontally = true
 		this.scale.pageAlignVertically = true
@@ -585,6 +585,7 @@ var game_state = {
 	},
 }
 
+//game = new Phaser.Game(1280,1920,Phaser.CANVAS,'' )
 game = new Phaser.Game(1280,h,Phaser.CANVAS,'' )
 game.state.add('boot',bootstate)
 game.state.add('preload',preloadstate)
