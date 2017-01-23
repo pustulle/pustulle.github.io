@@ -519,13 +519,14 @@ character.prototype.flag_on_life_off = function() {
 var bootstate= {
 	preload: function(){
 		console.log("%cStarting PaperMania game", "color:white; background:red");
-		//this.stage.backgroundColor = "#3b2c27"
+		this.stage.backgroundColor = "#FFFFFF"
 		this.load.image('particle_player','assets/particle_player.png')
 		this.load.image('studio','assets/studio.png')
 		this.load.image("loading","assets/loading.png"); 
 	},
 	create: function(){
-		this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
+		this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
+		//this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
 		this.scale.pageAlignHorizontally = true
 		this.scale.pageAlignVertically = true
 		this.scale.refresh()
