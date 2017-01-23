@@ -87,7 +87,7 @@ first.prototype.update = function() {
 }
 
 character = function(){
-	Phaser.Sprite.call(this,game,w2,h2+25,'rect_l')
+	Phaser.Sprite.call(this,game,w2,h2+25,'rect')
 	this.tint=0x030000
 	this.side=[w-100,100]
 	this.anchor.y=1
@@ -125,17 +125,20 @@ character = function(){
 	this.button3.alpha=0
 
 	this.random_list=[1,2,3,4,5,6]
-	this.ghost_player = game.add.emitter(this.x, this.y-25, 200)
+	this.ghost_player = game.add.emitter(this.x, this.y-25, 3)
 	this.ghost_player.makeParticles("rect_l")
-	this.ghost_player.minParticleSpeed.setTo(-0,-0)
-	this.ghost_player.maxParticleSpeed.setTo(0,0)
-	this.ghost_player.setAlpha(.1, .2)
+	this.ghost_player.setXSpeed(0,0)
+	this.ghost_player.setYSpeed(0,0)
+	//this.ghost_player.minParticleSpeed.setTo(-190,0)
+	//this.ghost_player.maxParticleSpeed.setTo(-190,0)
+	this.ghost_player.minParticleAlpha=.2
+	//this.ghost_player.setAlpha(.1,.5)
 	this.ghost_player.minParticleScale = 1
 	this.ghost_player.maxParticleScale = 1
 	this.ghost_player.minRotation = 0
 	this.ghost_player.maxRotation = 0
 	this.ghost_player.on=true
-	this.ghost_player.start(true, 80, 50)
+	this.ghost_player.start(true,20,20)
 
 	this.score = game.add.bitmapText(w2,h-200,'lucky',"400",60)
 	this.number=10
@@ -208,7 +211,6 @@ character.prototype.move = function(side) {
 			this.time_move=game.rnd.integerInRange(500,2000)
 			this.calculate_side()
 			this.tween_characteristic = game.add.tween(this).to({x:this.sidex,y:h2+25},this.time_move,Phaser.Easing.Linear.None,true,0)
-
 			this.tween_characteristic.onComplete.add(function(){this.tween_exist=false ; console.log('msg') ; this.move(0)},this)
 		}else if(side==1 && this.flag_cant_moving==false) {
 			this.tween_move_1_exist=true
@@ -362,15 +364,10 @@ character.prototype.flag_repulse_left_on = function() {
 	this.flag_repulse_left=true
 }
 
-character.prototype.reset_aspect_for_revive = function() {
-	this.tween_reset_aspect=game.add.tween(this.scale).to({x:1,y:1},800,Phaser.Easing.Elastic.Out,true,0)
-	this.alpha=1
-}
-
-
 character.prototype.reset_aspect=function(){
 	this.tween_reset_aspect=game.add.tween(this.scale).to({x:1,y:1},800,Phaser.Easing.Elastic.Out,true,0)
 	this.alpha=1
+	this.ghost_player.on=true
 	this.random_effect()
 }
 
@@ -442,6 +439,7 @@ character.prototype.die = function() {
 		}else{
 			console.log('game_over')
 			this.game_over.visible=true
+			this.ghost_player.visible=false
 			this.visible=false
 			this.tween_exist && this.stop_move()
 			this.flag_repulse=false
@@ -466,6 +464,7 @@ character.prototype.explode=function(){
 	this.particle.maxRotation = 0
 	this.particle.on=false
 	this.particle.start(true, 500,null,20)
+	this.ghost_player.on=false
 	this.ghost_player.visible=false
 }
 
@@ -488,10 +487,14 @@ character.prototype.restart = function() {
 
 character.prototype.revive = function() {
 	console.log("revive");
+	this.tween_reset_aspect=game.add.tween(this.scale).to({x:1,y:1},900,Phaser.Easing.Elastic.Out,true,0)
+	this.x=w2
+	this.y=h2+25
+	this.ghost_player.visible=true
+	this.ghost_player.on=true
 	this.tween_revive = game.add.tween(this).to({alpha:1},900,Phaser.Easing.Bounce.Out,true,0)
 	this.tween_revive.onComplete.add(this.flag_on_life_on,this)
 	this.tween_revive.onComplete.add(this.flag_cant_moving_on,this)
-	this.tween_revive.onComplete.add(this.reset_aspect_for_revive,this)
 	this.tween_revive.onComplete.add(function(){this.tween_exist=false})
 	this.tween_revive.onComplete.add(() => this.move(0),this)
 }
