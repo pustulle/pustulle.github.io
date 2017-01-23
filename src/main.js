@@ -103,6 +103,7 @@ character = function(){
 	this.flag_repulse_left=true
 	this.flag_effect=true
 	this.tween_exist=false
+	this.tween_move_1_exist=false
 	//this.flag_random_effect=true
 	this.flag_enerve=true
 	//this.flag_update=true
@@ -230,11 +231,14 @@ character.prototype.move = function(side) {
 		this.tween_characteristic.onComplete.add(function(){this.tween_exist=false ; console.log('msg') ; this.move(0)},this)
 		//this.tween_characteristic.onComplete.add(() => this.move(0),this)
 	}else if(side==1 && this.flag_cant_moving==false) {
+		this.tween_move_1_exist=true
 		console.log('move1')
 		var chosen_value = Math.random() < 0.5 ? 0 : w;
+		this.flag_cant_moving_on()
 		this.tween_characteristic=game.add.tween(this).to({x:chosen_value},this.time_move_to_an_opposite_direction,Phaser.Easing.Linear.None,true,0)
 		this.tween_exist=true
-		game.time.events.add(20,this.flag_cant_moving_on,this)
+		//TODO
+		//game.time.events.add(20,this.flag_cant_moving_on,this)
 
 	}
 }
@@ -328,7 +332,7 @@ character.prototype.show_little_effect_left = function() {
 }
 
 character.prototype.random_effect=function(){
-	if(this.flag_cant_moving){
+	if(this.flag_cant_moving && this.tween_move_1_exist==false){
 		//this.flag_cant_moving_on()
 		console.log('activate')
 		this.random_effect_generate=game.rnd.integerInRange(0,4)
@@ -371,11 +375,11 @@ character.prototype.flag_effect_on = function() {
 }
 
 character.prototype.flag_repulse_right_on = function() {
-	this.reset_aspect()
+	this.flag_cant_moving && this.reset_aspect()
 	this.flag_repulse_right=true
 }
 character.prototype.flag_repulse_left_on = function() {
-	this.reset_aspect()
+	this.flag_cant_moving && this.reset_aspect()
 	this.flag_repulse_left=true
 }
 
@@ -394,6 +398,7 @@ character.prototype.stop_move = function() {
 	console.log('stop')
 	this.tween_characteristic.stop()	
 	this.tween_exist=false
+	this.tween_move_1_exist=false
 	this.tween_characteristic_on=false
 }
 
@@ -505,7 +510,9 @@ character.prototype.revive = function() {
 	this.tween_revive.onComplete.add(this.flag_on_life_on,this)
 	this.tween_revive.onComplete.add(this.flag_cant_moving_on,this)
 	this.tween_revive.onComplete.add(this.reset_aspect,this)
+	this.tween_revive.onComplete.add(function(){this.tween_exist=false})
 	this.tween_revive.onComplete.add(() => this.move(0),this)
+	//this.tween_revive.onComplete.add(function(){this.tween_move_1_exist=true})
 }
 
 character.prototype.hide_particle = function() {
