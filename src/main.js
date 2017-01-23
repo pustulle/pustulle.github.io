@@ -105,7 +105,7 @@ character = function(){
 	this.flag_cant_moving=true
 	this.time_repulse=40
 	this.time_move_to_center=400
-	this.time_move_to_an_opposite_direction=600
+	this.time_move_to_an_opposite_direction=800
 	this.time_enerve=400
 	this.count_for_die=3
 	//TODO
