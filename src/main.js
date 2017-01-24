@@ -93,6 +93,13 @@ character = function(){
 	this.anchor.y=1
 	this.anchor.x=.5
 	this.number_side=1
+this.fake_square={}
+	for (var i = 0; i < 10; i++) {
+		this.fake_square[i]=game.add.sprite(w2,h2+25,'rect')
+		this.fake_square[i].anchor.setTo(.5,1)
+		this.fake_square[i].alpha=0
+	}
+
 	this.leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
 	this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
 	this.flag_repulse_right=true
@@ -129,10 +136,7 @@ character = function(){
 	this.ghost_player.makeParticles("rect_l")
 	this.ghost_player.setXSpeed(0,0)
 	this.ghost_player.setYSpeed(0,0)
-	//this.ghost_player.minParticleSpeed.setTo(-190,0)
-	//this.ghost_player.maxParticleSpeed.setTo(-190,0)
 	this.ghost_player.minParticleAlpha=.2
-	//this.ghost_player.setAlpha(.1,.5)
 	this.ghost_player.minParticleScale = 1
 	this.ghost_player.maxParticleScale = 1
 	this.ghost_player.minRotation = 0
@@ -146,7 +150,7 @@ character = function(){
 	this.score.anchor.setTo(.5,.5)
 
 	this.life=game.add.bitmapText(w2,h-100,'lucky',"3",30)
-	this.game_over=game.add.bitmapText(w2,h2,'lucky_red',"game over",100)
+	this.game_over=game.add.bitmapText(w2,h2,'lucky_red',"game over",35)
 	this.game_over.anchor.setTo(.5,.5)
 	this.game_over.visible=false
 	this.life.anchor.setTo(.5,.5)
@@ -181,26 +185,122 @@ character.prototype.enerve = function() {
 	this.tween_enerve1=game.add.tween(this.scale).to({x:2,y:.3},550,Phaser.Easing.Linear.None,true,0)
 	this.tween_enerve2=game.add.tween(this.scale).to({x:1.2,y:1.2},550,Phaser.Easing.Elastic.Out,true,550)
 	this.tween_enerve3=game.add.tween(this).to({y:-200},750,Phaser.Easing.Quartic.In,true,150)
-	this.tween_enerve4=game.add.tween(this).to({y:420},4050,Phaser.Easing.Linear.None)
+	this.tween_enerve4=game.add.tween(this).to({y:420,x:300},4050,Phaser.Easing.Linear.None)
 	this.tween_enerve3bis=game.add.tween(this.scale).to({x:1,y:1.4},250,Phaser.Easing.Elastic.Out,true,550)
 	this.tween_enerve4bis=game.add.tween(this.scale).to({x:1.6,y:.8},150,Phaser.Easing.Elastic.Out,true,950)
+	//this.tween_enerve5=game.add.tween(this.scale).to({x:1,y:1},550,Phaser.Easing.Elastic.Out)
+	//this.tween_enerve5bis=game.add.tween(this).to({y:280},100,Phaser.Easing.Elastic.Out,true,4750)
+	this.tween_enerve5=game.add.tween(this.scale).to({x:1,y:1},150,Phaser.Easing.Elastic.Out)
+	//this.tween_enerve6=game.add.tween(this.scale).to({x:2,y:1},80,Phaser.Easing.Elastic.Out)
+	//this.tween_enerve6.yoyo(80,true)
+	this.tween_enerve6=game.add.tween(this).to({y:380},500,Phaser.Easing.Elastic.Out)
+
 	this.tween_enerve3.chain(this.tween_enerve4)
-	this.tween_enerve4.onComplete.add(() => this.move(1),this)
+	this.tween_enerve4.chain(this.tween_enerve5)
+	this.tween_enerve5.chain(this.tween_enerve6)
+	this.tween_enerve6.onComplete.add(() => this.move(1),this)
 }
 
 character.prototype.scale_x = function() {
 	console.log("scale_x");
 	this.ghost_player.on=false
-	this.tween_scale_x0=game.add.tween(this.scale).to({x:10,y:.3},850,Phaser.Easing.Linear.None,true,0)
+	this.tween_scale_x0=game.add.tween(this.scale).to({x:10,y:.1},450,Phaser.Easing.Bounce.Out,true,0)
 	this.tween_scale_x0.onComplete.add(() => this.move(1),this)
 }
+
+character.prototype.water = function() {
+	console.log("water");
+	this.ghost_player.on=false
+	this.fake_square[1].scale.x=19
+	this.fake_square[1].alpha=.95
+	this.tween_water0=game.add.tween(this.fake_square[1].scale).to({y:8},850,Phaser.Easing.Bounce.Out,true,0)
+	this.tween_water1=game.add.tween(this.fake_square[1].scale).to({y:0},450,Phaser.Easing.Bounce.In)
+this.tween_water0.chain(this.tween_water1)
+	this.tween_water0.onComplete.add(() => this.move(1),this)
+}
+
+character.prototype.multiple = function() {
+	console.log("multiple");
+	this.ghost_player.on=false
+	this.fake_square[1].alpha=1
+	this.fake_square[2].alpha=1
+	this.fake_square[3].alpha=1
+	this.tween_multiple0=game.add.tween(this.fake_square[1]).to({x:this.x+200},850,Phaser.Easing.Bounce.Out,true,0)
+	this.tween_multiple1=game.add.tween(this.fake_square[2]).to({x:this.x-200},850,Phaser.Easing.Bounce.Out,true,0)
+	this.tween_multiple2=game.add.tween(this).to({x:this.x-200},850,Phaser.Easing.Bounce.Out,true,0)
+	this.tween_multiple3=game.add.tween(this.fake_square[2]).to({x:this.fake_square[3].x},850,Phaser.Easing.Bounce.Out)
+	this.tween_multiple2.chain(this.tween_multiple3)
+	this.tween_multiple4=game.add.tween(this.fake_square[1]).to({x:w+200},850,Phaser.Easing.Bounce.Out)
+	this.tween_multiple5=game.add.tween(this.fake_square[2]).to({x:-200},850,Phaser.Easing.Bounce.Out)
+	this.tween_multiple6=game.add.tween(this.fake_square[3]).to({x:-200},850,Phaser.Easing.Bounce.Out)
+	this.tween_multiple3.chain(this.tween_multiple4)
+	this.tween_multiple4.chain(this.tween_multiple5)
+	this.tween_multiple5.chain(this.tween_multiple6)
+	this.tween_multiple6.onComplete.add(() => this.move(1),this)
+}
+
+character.prototype.stair = function() {
+	console.log("stair");
+	this.ghost_player.on=false
+	this.fake_square[1].alpha=1
+	this.fake_square[2].alpha=1
+	this.fake_square[3].alpha=1
+	this.fake_square[4].alpha=1
+	this.stair_position_y=[this.y-60,this.y-120,this.y-180,this.y]
+	this.stair_side=[-200,w+200]
+	this.stair_side_position=game.rnd.integerInRange(0,1)
+	this.stair_opp=Phaser.ArrayUtils.numberArray(1,3)
+	Phaser.ArrayUtils.shuffle(this.stair_opp)
+
+	this.chooce_stair_position=game.rnd.integerInRange(0,3)
+	this.tween_stair0=game.add.tween(this.fake_square[this.stair_opp[0]]).to({y:this.stair_position_y[0]},850,Phaser.Easing.Bounce.Out,true,0)
+	this.tween_stair1=game.add.tween(this.fake_square[this.stair_opp[1]]).to({y:this.stair_position_y[1]},850,Phaser.Easing.Bounce.Out,true,850)
+	this.tween_stair2=game.add.tween(this.fake_square[this.stair_opp[2]]).to({y:this.stair_position_y[2]},850,Phaser.Easing.Bounce.Out,true,1750)
+	this.tween_stair3=game.add.tween(this).to({y:this.stair_position_y[this.chooce_stair_position]},850,Phaser.Easing.Bounce.Out,true,2550)
+	this.tween_stair4=game.add.tween(this).to({alpha:1},5,Phaser.Easing.Bounce.Out)
+	this.tween_stair5=game.add.tween(this.fake_square[1]).to({x:this.stair_side[this.stair_side_position]},800,Phaser.Easing.Bounce.Out)
+	this.tween_stair6=game.add.tween(this.fake_square[2]).to({x:this.stair_side[this.stair_side_position]},800,Phaser.Easing.Bounce.Out)
+	this.tween_stair7=game.add.tween(this.fake_square[3]).to({x:this.stair_side[this.stair_side_position]},800,Phaser.Easing.Bounce.Out)
+	this.tween_stair8=game.add.tween(this.fake_square[4]).to({x:this.stair_side[this.stair_side_position]},800,Phaser.Easing.Bounce.Out)
+
+	this.hide_fake=function(){
+		//this.fake_square[this.chooce_stair_position].alpha=0
+		for (var i = 1; i < 4; i++) {
+			//console.log("this.position.y",this.position.y);
+			console.log(this.chooce_stair_position,"positionchooce")
+			console.log(this.fake_square[i].y);
+	console.log(this.stair_position_y[this.chooce_stair_position],"good");
+			if(this.fake_square[i].y==this.stair_position_y[this.chooce_stair_position]){
+				this.fake_square[i].alpha=0
+			}
+			//}
+		}
+	}
+		this.tween_stair0.onComplete.add(function(){this.alpha=0},this)
+		this.tween_stair3.chain(this.tween_stair4)
+		game.time.events.add( 4000,this.hide_fake,this )
+		this.tween_stair4.chain(this.tween_stair5)
+		this.tween_stair5.chain(this.tween_stair6)
+		this.tween_stair6.chain(this.tween_stair7)
+		this.tween_stair7.chain(this.tween_stair8)
+		this.tween_stair8.onComplete.add(() => this.move(1),this)
+
+	}
 
 character.prototype.scale_y = function() {
 	console.log("scale_y");
 	this.ghost_player.on=false
-	this.tween_scale_y0=game.add.tween(this.scale).to({y:10},850,Phaser.Easing.Elastic.InOut,true,0)
+	this.tween_scale_y0=game.add.tween(this.scale).to({y:10},950,Phaser.Easing.Bounce.In,true,0)
 	this.tween_scale_y0.onComplete.add(() => this.move(1),this)
 }
+
+character.prototype.big = function() {
+	console.log("big");
+	this.ghost_player.on=false
+	this.tween_big=game.add.tween(this.scale).to({y:8,x:8},850,Phaser.Easing.Bounce.Out,true,0)
+	this.tween_big.onComplete.add(() => this.move(1),this)
+}
+
 //si 0 processus normal si 1 random side
 character.prototype.move = function(side) {
 	console.log("try_to_move");
@@ -315,7 +415,7 @@ character.prototype.show_little_effect_left = function() {
 character.prototype.random_effect=function(){
 	if(this.flag_cant_moving && this.tween_move_1_exist==false){
 		console.log('activate')
-		this.random_effect_generate=game.rnd.integerInRange(0,4)
+		this.random_effect_generate=game.rnd.integerInRange(0,18)
 		console.log(this.random_effect_generate);
 		switch(this.random_effect_generate){
 			case 0:
@@ -334,8 +434,43 @@ character.prototype.random_effect=function(){
 				this.flag_cant_moving=false
 				this.move_to_center(this.scale_y)
 				break
+			case 4:
+				this.flag_cant_moving=false
+				this.move_to_center(this.water)
+				break
+			case 5:
+				this.flag_cant_moving=false
+				this.move_to_center(this.stair)
+				break
+			case 6:
+				this.flag_cant_moving=false
+				this.move_to_center(this.multiple)
+				break
+			case 7:
+				this.flag_cant_moving=false
+				this.move_to_center(this.big)
+				break
+			case 8:
+				this.move(0)
+				this.jump_enerve()
+				break
+			case 9:
+				this.move(0)
+				this.jump_enerve()
+				break
+			case 10:
+				this.move(0)
+				this.jump_enerve()
+				break
+			case 11:
+				this.move(0)
+				this.jump_enerve()
+				break
 			default:
 				this.move(0)
+		//	default:
+		//		this.flag_cant_moving=false
+		//		this.move_to_center(this.big)
 		}
 	}
 }
@@ -364,13 +499,23 @@ character.prototype.flag_repulse_left_on = function() {
 	this.flag_repulse_left=true
 }
 
+character.prototype.reset_aspect_fake_square=function(){
+	for (var i = 0; i < 10; i++) {
+		this.fake_square[i].alpha=0
+		this.fake_square[i].x=w2
+		this.fake_square[i].y=h2+25
+		this.fake_square[i].scale.setTo(1,1)
+	}
+}
+
 character.prototype.reset_aspect=function(){
+	console.log('reset_aspect')
 	this.tween_reset_aspect=game.add.tween(this.scale).to({x:1,y:1},800,Phaser.Easing.Elastic.Out,true,0)
 	this.alpha=1
 	this.ghost_player.on=true
+	this.reset_aspect_fake_square()	
 	this.random_effect()
 }
-
 character.prototype.flag_enerve_on = function() {
 	this.y=0
 	this.flag_enerve=true	
@@ -430,6 +575,7 @@ character.prototype.die = function() {
 		this.count_for_die--
 		if (this.count_for_die>=1){
 			this.life.text=this.count_for_die
+			this.reset_aspect_fake_square()	
 			this.explode()
 			this.visible=false	
 			this.tween_exist && this.stop_move()
@@ -438,6 +584,7 @@ character.prototype.die = function() {
 			game.time.events.add( 100,this.revive,this )
 		}else{
 			console.log('game_over')
+			this.reset_aspect_fake_square()	
 			this.game_over.visible=true
 			this.ghost_player.visible=false
 			this.visible=false
@@ -469,7 +616,7 @@ character.prototype.explode=function(){
 }
 
 character.prototype.anim_score = function() {
-	this.tween_score = game.add.tween(this.score.scale).to({x:2,y:2},800,Phaser.Easing.Linear.None,true,0)
+	this.tween_score = game.add.tween(this.score.scale).to({x:1.2,y:1.2},800,Phaser.Easing.Linear.None,true,0)
 	this.tween_score.onComplete.add(this.replay,this)	
 }
 
@@ -487,6 +634,7 @@ character.prototype.restart = function() {
 
 character.prototype.revive = function() {
 	console.log("revive");
+	this.reset_aspect_fake_square()
 	this.tween_reset_aspect=game.add.tween(this.scale).to({x:1,y:1},900,Phaser.Easing.Elastic.Out,true,0)
 	this.x=w2
 	this.y=h2+25
@@ -521,7 +669,7 @@ character.prototype.flag_on_life_off = function() {
 
 var bootstate= {
 	preload: function(){
-		console.log("%cStarting PaperMania game", "color:white; background:red");
+		console.log("%cStarting minimalistic game", "color:white; background:red");
 		this.stage.backgroundColor = "#FFFFFF"
 		this.load.image('particle_player','assets/particle_player.png')
 		this.load.image('studio','assets/studio.png')
@@ -552,8 +700,10 @@ var preloadstate = {
 		this.game.load.image("button","assets/button.png");
 		this.game.load.image("background","assets/background.png");
 		//font bitmapFont
-		this.game.load.bitmapFont('lucky_red','fonts/font_red.png', 'fonts/font_red.fnt');
-		this.game.load.bitmapFont('lucky','fonts/font.png', 'fonts/font.fnt');
+		this.game.load.bitmapFont('lucky_red','fonts/font_ab_red.png', 'fonts/font_ab.fnt');
+		this.game.load.bitmapFont('lucky','fonts/font_ab.png', 'fonts/font_ab.fnt');
+		//this.game.load.bitmapFont('lucky_red','fonts/font_red.png', 'fonts/font_red.fnt');
+		//this.game.load.bitmapFont('lucky','fonts/font.png', 'fonts/font.fnt');
 	},
 	create: function(){
 		//this.game.state.start("game_first_screen");
@@ -582,7 +732,7 @@ var game_state = {
 		game.add.sprite(0,0,'background')
 		this.game= new character() 
 		game.add.existing(this.game)
-		this.game.alpha=.8
+		//this.game.alpha=.8
 		this.filter=game.add.sprite(0,0,'filter')
 		this.filter.alpha=.0
 	},
