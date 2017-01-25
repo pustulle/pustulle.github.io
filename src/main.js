@@ -93,7 +93,7 @@ character = function(){
 	this.anchor.y=1
 	this.anchor.x=.5
 	this.number_side=1
-this.fake_square={}
+	this.fake_square={}
 	for (var i = 0; i < 10; i++) {
 		this.fake_square[i]=game.add.sprite(w2,h2+25,'rect')
 		this.fake_square[i].anchor.setTo(.5,1)
@@ -205,17 +205,17 @@ character.prototype.enervous = function() {
 	console.log("enervous");
 	this.ghost_player.on=false
 	this.enervous_fonction=function(){
-	this.tween_enervous_0=game.add.tween(this).to({y:200},150,Phaser.Easing.Linear.None,true,0)
-	this.tween_enervous_1=game.add.tween(this).to({y:h2+25},100,Phaser.Easing.Linear.None)
-	this.tween_enervous_2=game.add.tween(this.scale).to({x:2,y:.5},100,Phaser.Easing.Bounce.Out,true,250)
-	this.tween_enervous_3=game.add.tween(this.scale).to({x:1,y:1},50,Phaser.Easing.Bounce.Out,true,350)
-	this.tween_enervous_0.chain(this.tween_enervous_1)
+		this.tween_enervous_0=game.add.tween(this).to({y:200},150,Phaser.Easing.Linear.None,true,0)
+		this.tween_enervous_1=game.add.tween(this).to({y:h2+25},100,Phaser.Easing.Linear.None)
+		this.tween_enervous_2=game.add.tween(this.scale).to({x:2,y:.5},100,Phaser.Easing.Bounce.Out,true,250)
+		this.tween_enervous_3=game.add.tween(this.scale).to({x:1,y:1},50,Phaser.Easing.Bounce.Out,true,350)
+		this.tween_enervous_0.chain(this.tween_enervous_1)
 	}
-this.enervous_fonction()
-game.time.events.add(400,this.enervous_fonction,this )
-game.time.events.add( 800,this.enervous_fonction,this )
-game.time.events.add( 1200,this.enervous_fonction,this )
-game.time.events.add( 1600,() => this.move(1),this )
+	this.enervous_fonction()
+	game.time.events.add(400,this.enervous_fonction,this )
+	game.time.events.add( 800,this.enervous_fonction,this )
+	game.time.events.add( 1200,this.enervous_fonction,this )
+	game.time.events.add( 1600,() => this.move(1),this )
 }
 
 character.prototype.scale_x = function() {
@@ -232,7 +232,7 @@ character.prototype.water = function() {
 	this.fake_square[1].alpha=.85
 	this.tween_water0=game.add.tween(this.fake_square[1].scale).to({y:8},850,Phaser.Easing.Bounce.Out,true,0)
 	this.tween_water1=game.add.tween(this.fake_square[1].scale).to({y:0},450,Phaser.Easing.Bounce.In)
-this.tween_water0.chain(this.tween_water1)
+	this.tween_water0.chain(this.tween_water1)
 	this.tween_water0.onComplete.add(() => this.move(1),this)
 }
 
@@ -280,29 +280,37 @@ character.prototype.stair = function() {
 	this.tween_stair7=game.add.tween(this.fake_square[3]).to({x:this.stair_side[this.stair_side_position]},800,Phaser.Easing.Bounce.Out)
 	this.tween_stair8=game.add.tween(this.fake_square[4]).to({x:this.stair_side[this.stair_side_position]},800,Phaser.Easing.Bounce.Out)
 
+
+
+	this.tween_stair0.onComplete.add(function(){this.alpha=0},this)
+	this.tween_stair3.chain(this.tween_stair4)
+
 	this.hide_fake=function(){
-		//this.fake_square[this.chooce_stair_position].alpha=0
 		for (var i = 1; i < 4; i++) {
-			//console.log("this.position.y",this.position.y);
 			console.log(this.chooce_stair_position,"positionchooce")
 			console.log(this.fake_square[i].y);
-	console.log(this.stair_position_y[this.chooce_stair_position],"good");
+			console.log(this.stair_position_y[this.chooce_stair_position],"good");
 			if(this.fake_square[i].y==this.stair_position_y[this.chooce_stair_position]){
 				this.fake_square[i].alpha=0
 			}
-			//}
 		}
-	}
-		this.tween_stair0.onComplete.add(function(){this.alpha=0},this)
-		this.tween_stair3.chain(this.tween_stair4)
-		game.time.events.add( 4000,this.hide_fake,this )
-		this.tween_stair4.chain(this.tween_stair5)
-		this.tween_stair5.chain(this.tween_stair6)
-		this.tween_stair6.chain(this.tween_stair7)
-		this.tween_stair7.chain(this.tween_stair8)
-		this.tween_stair8.onComplete.add(() => this.move(1),this)
+	this.tween_stair5.start()
+	this.tween_stair6.start()
+	this.tween_stair7.start()
+	this.tween_stair8.start()
+	this.move(1)
 
 	}
+
+
+	this.tween_stair4.onComplete.add(this.hide_fake,this)
+
+	//game.time.events.add( 4000,this.hide_fake,this )
+	//this.tween_stair5.chain(this.tween_stair6)
+	//this.tween_stair6.chain(this.tween_stair7)
+	//this.tween_stair7.chain(this.tween_stair8)
+
+}
 
 character.prototype.scale_y = function() {
 	console.log("scale_y");
