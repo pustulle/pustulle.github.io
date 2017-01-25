@@ -88,7 +88,7 @@ first.prototype.update = function() {
 
 character = function(){
 	Phaser.Sprite.call(this,game,w2,h2+25,'rect')
-	this.tint=0x030000
+	//this.tint=0x030000
 	this.side=[w-100,100]
 	this.anchor.y=1
 	this.anchor.x=.5
@@ -199,6 +199,23 @@ character.prototype.enerve = function() {
 	this.tween_enerve4.chain(this.tween_enerve5)
 	this.tween_enerve5.chain(this.tween_enerve6)
 	this.tween_enerve6.onComplete.add(() => this.move(1),this)
+}
+
+character.prototype.enervous = function() {
+	console.log("enervous");
+	this.ghost_player.on=false
+	this.enervous_fonction=function(){
+	this.tween_enervous_0=game.add.tween(this).to({y:200},150,Phaser.Easing.Linear.None,true,0)
+	this.tween_enervous_1=game.add.tween(this).to({y:h2+25},100,Phaser.Easing.Linear.None)
+	this.tween_enervous_2=game.add.tween(this.scale).to({x:2,y:.5},100,Phaser.Easing.Bounce.Out,true,250)
+	this.tween_enervous_3=game.add.tween(this.scale).to({x:1,y:1},50,Phaser.Easing.Bounce.Out,true,350)
+	this.tween_enervous_0.chain(this.tween_enervous_1)
+	}
+this.enervous_fonction()
+game.time.events.add(400,this.enervous_fonction,this )
+game.time.events.add( 800,this.enervous_fonction,this )
+game.time.events.add( 1200,this.enervous_fonction,this )
+game.time.events.add( 1600,() => this.move(1),this )
 }
 
 character.prototype.scale_x = function() {
@@ -451,8 +468,8 @@ character.prototype.random_effect=function(){
 				this.move_to_center(this.big)
 				break
 			case 8:
-				this.move(0)
-				this.jump_enerve()
+				this.flag_cant_moving=false
+				this.move_to_center(this.enervous)
 				break
 			case 9:
 				this.move(0)
@@ -468,9 +485,6 @@ character.prototype.random_effect=function(){
 				break
 			default:
 				this.move(0)
-		//	default:
-		//		this.flag_cant_moving=false
-		//		this.move_to_center(this.big)
 		}
 	}
 }
