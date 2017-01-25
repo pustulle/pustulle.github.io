@@ -229,7 +229,7 @@ character.prototype.water = function() {
 	console.log("water");
 	this.ghost_player.on=false
 	this.fake_square[1].scale.x=19
-	this.fake_square[1].alpha=.95
+	this.fake_square[1].alpha=.85
 	this.tween_water0=game.add.tween(this.fake_square[1].scale).to({y:8},850,Phaser.Easing.Bounce.Out,true,0)
 	this.tween_water1=game.add.tween(this.fake_square[1].scale).to({y:0},450,Phaser.Easing.Bounce.In)
 this.tween_water0.chain(this.tween_water1)
