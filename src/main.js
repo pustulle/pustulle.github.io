@@ -33,19 +33,19 @@ first = function(){
 	this.flag_drag && this.allow_drag(this)
 	this.anchor.setTo(.5,.5)
 	this.visible=true
-	this.ghost_player = game.add.emitter(this.x, this.y-50, 200)
-	this.ghost_player.makeParticles("rect")
-	this.ghost_player.minParticleSpeed.setTo(-0,-0)
-	this.ghost_player.maxParticleSpeed.setTo(0,0)
-	this.ghost_player.setAlpha(.1, .2)
+	this.ghost_player = game.add.emitter(this.x, this.y-25, 3)
+	this.ghost_player.makeParticles("rect_l")
+	this.ghost_player.setXSpeed(0,0)
+	this.ghost_player.setYSpeed(0,0)
+	this.ghost_player.minParticleAlpha=.2
 	this.ghost_player.minParticleScale = 1
 	this.ghost_player.maxParticleScale = 1
 	this.ghost_player.minRotation = 0
 	this.ghost_player.maxRotation = 0
 	this.ghost_player.on=true
-	this.ghost_player.start(true,8000, 200)
+	this.ghost_player.start(true,20,20)
 	this.fall_jump()
-	this.title_game = game.add.bitmapText(w2,200,"lucky",'RETROSCAPE',50)
+	this.title_game = game.add.bitmapText(w2,200,"lucky",'RETROSCAPE',20)
 	this.title_game.flag_drag=true
 	this.title_game.flag_drag && this.allow_drag(this.title_game)
 	this.title_game.anchor.setTo(.5,.5)
@@ -88,7 +88,6 @@ first.prototype.update = function() {
 
 character = function(){
 	Phaser.Sprite.call(this,game,w2,h2+25,'rect')
-	//this.tint=0x030000
 	this.side=[w-100,100]
 	this.anchor.y=1
 	this.anchor.x=.5
@@ -246,14 +245,25 @@ character.prototype.multiple = function() {
 	this.tween_multiple1=game.add.tween(this.fake_square[2]).to({x:this.x-200},850,Phaser.Easing.Bounce.Out,true,0)
 	this.tween_multiple2=game.add.tween(this).to({x:this.x-200},850,Phaser.Easing.Bounce.Out,true,0)
 	this.tween_multiple3=game.add.tween(this.fake_square[2]).to({x:this.fake_square[3].x},850,Phaser.Easing.Bounce.Out)
-	this.tween_multiple2.chain(this.tween_multiple3)
 	this.tween_multiple4=game.add.tween(this.fake_square[1]).to({x:w+200},850,Phaser.Easing.Bounce.Out)
 	this.tween_multiple5=game.add.tween(this.fake_square[2]).to({x:-200},850,Phaser.Easing.Bounce.Out)
 	this.tween_multiple6=game.add.tween(this.fake_square[3]).to({x:-200},850,Phaser.Easing.Bounce.Out)
-	this.tween_multiple3.chain(this.tween_multiple4)
-	this.tween_multiple4.chain(this.tween_multiple5)
-	this.tween_multiple5.chain(this.tween_multiple6)
-	this.tween_multiple6.onComplete.add(() => this.move(1),this)
+	this.tween_multiple4b=game.add.tween(this.fake_square[1]).to({alpha:.2},450,Phaser.Easing.Bounce.Out)
+	this.tween_multiple5b=game.add.tween(this.fake_square[2]).to({alpha:.2},450,Phaser.Easing.Bounce.Out)
+	this.tween_multiple6b=game.add.tween(this.fake_square[3]).to({alpha:.2},450,Phaser.Easing.Bounce.Out)
+
+	this.tween_multiple2.chain(this.tween_multiple3)
+	this.multiple_next=function(){
+		this.tween_multiple4.start()
+		this.tween_multiple5.start()
+		this.tween_multiple6.start()
+		this.tween_multiple4b.start()
+		this.tween_multiple5b.start()
+		this.tween_multiple6b.start()
+		this.move(1)
+	}
+	this.tween_multiple3.onComplete.add(this.multiple_next,this)
+
 }
 
 character.prototype.stair = function() {
@@ -265,7 +275,6 @@ character.prototype.stair = function() {
 	this.fake_square[4].alpha=1
 	this.stair_position_y=[this.y-60,this.y-120,this.y-180,this.y]
 	this.stair_side=[-200,w+200]
-	this.stair_side_position=game.rnd.integerInRange(0,1)
 	this.stair_opp=Phaser.ArrayUtils.numberArray(1,3)
 	Phaser.ArrayUtils.shuffle(this.stair_opp)
 
@@ -275,15 +284,18 @@ character.prototype.stair = function() {
 	this.tween_stair2=game.add.tween(this.fake_square[this.stair_opp[2]]).to({y:this.stair_position_y[2]},850,Phaser.Easing.Bounce.Out,true,1750)
 	this.tween_stair3=game.add.tween(this).to({y:this.stair_position_y[this.chooce_stair_position]},850,Phaser.Easing.Bounce.Out,true,2550)
 	this.tween_stair4=game.add.tween(this).to({alpha:1},5,Phaser.Easing.Bounce.Out)
+	this.stair_side_position=game.rnd.integerInRange(0,1)
 	this.tween_stair5=game.add.tween(this.fake_square[1]).to({x:this.stair_side[this.stair_side_position]},800,Phaser.Easing.Bounce.Out)
+	this.tween_stair5b=game.add.tween(this.fake_square[1]).to({alpha:.1},200,Phaser.Easing.Bounce.Out)
+	this.stair_side_position=game.rnd.integerInRange(0,1)
 	this.tween_stair6=game.add.tween(this.fake_square[2]).to({x:this.stair_side[this.stair_side_position]},800,Phaser.Easing.Bounce.Out)
+	this.tween_stair6b=game.add.tween(this.fake_square[2]).to({alpha:.1},200,Phaser.Easing.Bounce.Out)
+	this.stair_side_position=game.rnd.integerInRange(0,1)
 	this.tween_stair7=game.add.tween(this.fake_square[3]).to({x:this.stair_side[this.stair_side_position]},800,Phaser.Easing.Bounce.Out)
+	this.tween_stair7b=game.add.tween(this.fake_square[3]).to({alpha:.1},200,Phaser.Easing.Bounce.Out)
+	this.stair_side_position=game.rnd.integerInRange(0,1)
 	this.tween_stair8=game.add.tween(this.fake_square[4]).to({x:this.stair_side[this.stair_side_position]},800,Phaser.Easing.Bounce.Out)
-
-
-
-	this.tween_stair0.onComplete.add(function(){this.alpha=0},this)
-	this.tween_stair3.chain(this.tween_stair4)
+	this.tween_stair8b=game.add.tween(this.fake_square[4]).to({alpha:.1},200,Phaser.Easing.Bounce.Out)
 
 	this.hide_fake=function(){
 		for (var i = 1; i < 4; i++) {
@@ -295,13 +307,19 @@ character.prototype.stair = function() {
 			}
 		}
 	this.tween_stair5.start()
+	this.tween_stair5b.start()
 	this.tween_stair6.start()
+	this.tween_stair6b.start()
 	this.tween_stair7.start()
+	this.tween_stair7b.start()
 	this.tween_stair8.start()
+	this.tween_stair8b.start()
 	this.move(1)
 
 	}
 
+	this.tween_stair0.onComplete.add(function(){this.alpha=0},this)
+	this.tween_stair3.chain(this.tween_stair4)
 
 	this.tween_stair4.onComplete.add(this.hide_fake,this)
 
@@ -325,6 +343,14 @@ character.prototype.big = function() {
 	this.tween_big=game.add.tween(this.scale).to({y:8,x:8},850,Phaser.Easing.Bounce.Out,true,0)
 	this.tween_big.onComplete.add(() => this.move(1),this)
 }
+character.prototype.little = function() {
+	console.log("little");
+	this.ghost_player.on=false
+	this.tween_big=game.add.tween(this.scale).to({y:.15,x:.15},850,Phaser.Easing.Bounce.Out,true,0)
+	this.tween_big.onComplete.add(() => this.move(1),this)
+}
+
+
 
 //si 0 processus normal si 1 random side
 character.prototype.move = function(side) {
@@ -480,8 +506,8 @@ character.prototype.random_effect=function(){
 				this.move_to_center(this.enervous)
 				break
 			case 9:
-				this.move(0)
-				this.jump_enerve()
+				this.flag_cant_moving=false
+				this.move_to_center(this.little)
 				break
 			case 10:
 				this.move(0)
@@ -492,6 +518,9 @@ character.prototype.random_effect=function(){
 				this.jump_enerve()
 				break
 			default:
+				//this.flag_cant_moving=false
+				//this.move_to_center(this.multiple)
+				//break
 				this.move(0)
 		}
 	}
@@ -527,6 +556,9 @@ character.prototype.reset_aspect_fake_square=function(){
 		this.fake_square[i].x=w2
 		this.fake_square[i].y=h2+25
 		this.fake_square[i].scale.setTo(1,1)
+		if(game.tweens.isTweening(this.fake_square[i])){
+			game.tweens.removeFrom(this.fake_square[i])	
+		}
 	}
 }
 
@@ -620,6 +652,8 @@ character.prototype.die = function() {
 		}	
 	}
 }
+
+
 
 character.prototype.explode=function(){
 	this.particle = game.add.emitter(this.x, this.y-28, 200)
@@ -728,8 +762,8 @@ var preloadstate = {
 		//this.game.load.bitmapFont('lucky','fonts/font.png', 'fonts/font.fnt');
 	},
 	create: function(){
-		//this.game.state.start("game_first_screen");
-		this.game.state.start("game_state");
+		this.game.state.start("game_first_screen");
+		//this.game.state.start("game_state");
 	}
 }
 
