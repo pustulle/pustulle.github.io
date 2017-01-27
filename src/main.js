@@ -790,7 +790,7 @@ var game_state = {
 		game.add.existing(this.game)
 		//this.game.alpha=.8
 		this.filter=game.add.sprite(0,0,'filter')
-		this.filter.alpha=.0
+		this.filter.alpha=0.2
 	},
 }
 
