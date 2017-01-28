@@ -794,7 +794,7 @@ var game_first_screen = {
 		game.time.events.add( 2000,() => this.opponent2.button_move(0),this.opponent2 )
 		game.time.events.add( 8000,() => game.state.start('game_state',game_state))
 		this.filter=game.add.sprite(0,0,'filter')
-		this.filter.alpha=0.4
+		this.filter.alpha=0.3
 	},
 }
 
@@ -805,7 +805,7 @@ var game_state = {
 		game.add.existing(this.game)
 		//this.game.alpha=.8
 		this.filter=game.add.sprite(0,0,'filter')
-		this.filter.alpha=0.4
+		this.filter.alpha=0.3
 	},
 }
 
