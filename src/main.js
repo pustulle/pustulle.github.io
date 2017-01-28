@@ -45,7 +45,7 @@ first = function(){
 	this.ghost_player.on=true
 	this.ghost_player.start(true,20,20)
 	this.fall_jump()
-	this.title_game = game.add.bitmapText(w2,200,"lucky",'RETROSCAPE',20)
+	this.title_game = game.add.bitmapText(w2,h2,"lucky_yellow",'RETROSCAPE',20)
 	this.title_game.flag_drag=true
 	this.title_game.flag_drag && this.allow_drag(this.title_game)
 	this.title_game.anchor.setTo(.5,.5)
@@ -87,6 +87,8 @@ first.prototype.update = function() {
 }
 
 character = function(){
+		this.flash=game.add.sprite(0,0,'flash')
+		this.flash.alpha=0
 	Phaser.Sprite.call(this,game,w2,h2+25,'rect')
 	this.side=[w-100,100]
 	this.anchor.y=1
@@ -368,6 +370,7 @@ character.prototype.move = function(side) {
 			console.log('move1')
 			var chosen_value = Math.random() < 0.5 ? 0 : w;
 			this.flag_cant_moving_on()
+			this.time_move_to_an_opposite_direction=game.rnd.integerInRange(400,800)
 			this.tween_characteristic=game.add.tween(this).to({x:chosen_value},this.time_move_to_an_opposite_direction,Phaser.Easing.Linear.None,true,0)
 			this.tween_exist=true
 		}
@@ -621,6 +624,12 @@ character.prototype.update=function(){
 	}
 }
 
+
+character.prototype.flash_activate=function(){
+this.tween_flash = game.add.tween(this.flash).to({alpha:1},100,Phaser.Easing.Bounce.Out,true,0)
+this.tween_flash.yoyo(100,true)
+}
+
 character.prototype.die = function() {
 	if(this.flag_on_life){
 		this.flag_on_life_off()
@@ -628,6 +637,7 @@ character.prototype.die = function() {
 		console.log('lifeenmoins')
 		this.count_for_die--
 		if (this.count_for_die>=1){
+			this.flash_activate()		
 			this.life.text=this.count_for_die
 			this.reset_aspect_fake_square()	
 			this.explode()
@@ -637,6 +647,7 @@ character.prototype.die = function() {
 			this.alpha=.1
 			game.time.events.add( 100,this.revive,this )
 		}else{
+			this.flash_activate()		
 			console.log('game_over')
 			this.reset_aspect_fake_square()	
 			this.game_over.visible=true
@@ -726,7 +737,7 @@ character.prototype.flag_on_life_off = function() {
 var bootstate= {
 	preload: function(){
 		console.log("%cStarting minimalistic game", "color:white; background:red");
-		this.stage.backgroundColor = "#FFFFFF"
+		this.stage.backgroundColor = "#250f2e"
 		this.load.image('particle_player','assets/particle_player.png')
 		this.load.image('studio','assets/studio.png')
 		this.load.image("loading","assets/loading.png"); 
@@ -755,7 +766,9 @@ var preloadstate = {
 		this.game.load.image("rect","assets/rect.png");
 		this.game.load.image("button","assets/button.png");
 		this.game.load.image("background","assets/background.png");
+		this.game.load.image("flash","assets/flash.png");
 		//font bitmapFont
+		this.game.load.bitmapFont('lucky_yellow','fonts/font_ab_yellow.png', 'fonts/font_ab.fnt');
 		this.game.load.bitmapFont('lucky_red','fonts/font_ab_red.png', 'fonts/font_ab.fnt');
 		this.game.load.bitmapFont('lucky','fonts/font_ab.png', 'fonts/font_ab.fnt');
 		//this.game.load.bitmapFont('lucky_red','fonts/font_red.png', 'fonts/font_red.fnt');
@@ -780,6 +793,8 @@ var game_first_screen = {
 		game.add.existing(this.opponent2)
 		game.time.events.add( 2000,() => this.opponent2.button_move(0),this.opponent2 )
 		game.time.events.add( 8000,() => game.state.start('game_state',game_state))
+		this.filter=game.add.sprite(0,0,'filter')
+		this.filter.alpha=0.4
 	},
 }
 
@@ -790,7 +805,7 @@ var game_state = {
 		game.add.existing(this.game)
 		//this.game.alpha=.8
 		this.filter=game.add.sprite(0,0,'filter')
-		this.filter.alpha=0.2
+		this.filter.alpha=0.4
 	},
 }
 
