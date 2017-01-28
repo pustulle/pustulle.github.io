@@ -370,7 +370,7 @@ character.prototype.move = function(side) {
 			console.log('move1')
 			var chosen_value = Math.random() < 0.5 ? 0 : w;
 			this.flag_cant_moving_on()
-			this.time_move_to_an_opposite_direction=game.rnd.integerInRange(400,800)
+			//this.time_move_to_an_opposite_direction=game.rnd.integerInRange(400,800)
 			this.tween_characteristic=game.add.tween(this).to({x:chosen_value},this.time_move_to_an_opposite_direction,Phaser.Easing.Linear.None,true,0)
 			this.tween_exist=true
 		}
@@ -521,7 +521,30 @@ character.prototype.random_effect=function(){
 				this.jump_enerve()
 				break
 			default:
+				//this.fl	break
+			case 9:
+				this.flag_cant_moving=false
+				this.move_to_center(this.little)
+				break
+			case 10:
+				this.move(0)
+				this.jump_enerve()
+				break
+			case 11:
+				this.move(0)
+				this.jump_enerve()
+				break
+			default:
 				//this.flag_cant_moving=false
+				//this.move_to_center(this.multiple)
+				//break
+				this.move(0)
+		}
+	}
+}
+
+character.prototype.move_to_center = function(next_function){
+	this.tween_move_to_centag_cant_moving=false
 				//this.move_to_center(this.multiple)
 				//break
 				this.move(0)
@@ -794,7 +817,7 @@ var game_first_screen = {
 		game.time.events.add( 2000,() => this.opponent2.button_move(0),this.opponent2 )
 		game.time.events.add( 8000,() => game.state.start('game_state',game_state))
 		this.filter=game.add.sprite(0,0,'filter')
-		this.filter.alpha=0.3
+		this.filter.alpha=0.25
 	},
 }
 
@@ -805,7 +828,7 @@ var game_state = {
 		game.add.existing(this.game)
 		//this.game.alpha=.8
 		this.filter=game.add.sprite(0,0,'filter')
-		this.filter.alpha=0.3
+		this.filter.alpha=0.25
 	},
 }
 
