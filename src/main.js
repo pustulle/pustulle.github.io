@@ -156,6 +156,7 @@ character = function(){
 	this.game_over.visible=false
 	this.life.anchor.setTo(.5,.5)
 	this.sound_move=game.add.audio('sound_move')
+	this.sound_repulse=game.add.audio('repulse')
 } 
 
 character.prototype = Object.create(Phaser.Sprite.prototype)
@@ -357,6 +358,11 @@ character.prototype.audio_move = function() {
 this.sound_move.play()
 
 }
+character.prototype.audio_repulse = function() {
+
+this.sound_repulse.play()
+
+}
 
 
 
@@ -395,6 +401,7 @@ character.prototype.calculate_side = function() {
 
 character.prototype.repulse_to_right = function() {
 	if(this.flag_on_life){
+		this.audio_repulse()
 		if(this.flag_cant_moving==false){
 			console.log('little_effect')
 			this.flag_repulse_right && this.show_little_effect_left()
@@ -416,6 +423,7 @@ character.prototype.repulse_to_right = function() {
 
 character.prototype.repulse_to_left = function() {
 	if(this.flag_on_life){
+		this.audio_repulse()
 		if(this.flag_cant_moving==false){
 			console.log('little_effect_left')
 			this.flag_repulse_left && this.show_little_effect_right()
@@ -771,6 +779,7 @@ var preloadstate = {
 		this.load.setPreloadSprite(loadingBar);
 		//audio_move
 		this.game.load.audio("sound_move","sounds/move.ogg");
+		this.game.load.audio("repulse","sounds/repulse.ogg");
 		//images
 		this.game.load.image("filter","assets/filter.png");
 		this.game.load.image("effect","assets/effect.png");
