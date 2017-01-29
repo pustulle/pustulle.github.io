@@ -87,8 +87,8 @@ first.prototype.update = function() {
 }
 
 character = function(){
-		this.flash=game.add.sprite(0,0,'flash')
-		this.flash.alpha=0
+	this.flash=game.add.sprite(0,0,'flash')
+	this.flash.alpha=0
 	Phaser.Sprite.call(this,game,w2,h2+25,'rect')
 	this.side=[w-100,100]
 	this.anchor.y=1
@@ -155,6 +155,7 @@ character = function(){
 	this.game_over.anchor.setTo(.5,.5)
 	this.game_over.visible=false
 	this.life.anchor.setTo(.5,.5)
+	this.sound_move=game.add.audio('sound_move')
 } 
 
 character.prototype = Object.create(Phaser.Sprite.prototype)
@@ -308,15 +309,15 @@ character.prototype.stair = function() {
 				this.fake_square[i].alpha=0
 			}
 		}
-	this.tween_stair5.start()
-	this.tween_stair5b.start()
-	this.tween_stair6.start()
-	this.tween_stair6b.start()
-	this.tween_stair7.start()
-	this.tween_stair7b.start()
-	this.tween_stair8.start()
-	this.tween_stair8b.start()
-	this.move(1)
+		this.tween_stair5.start()
+		this.tween_stair5b.start()
+		this.tween_stair6.start()
+		this.tween_stair6b.start()
+		this.tween_stair7.start()
+		this.tween_stair7b.start()
+		this.tween_stair8.start()
+		this.tween_stair8b.start()
+		this.move(1)
 
 	}
 
@@ -350,6 +351,11 @@ character.prototype.little = function() {
 	this.ghost_player.on=false
 	this.tween_big=game.add.tween(this.scale).to({y:.15,x:.15},850,Phaser.Easing.Bounce.Out,true,0)
 	this.tween_big.onComplete.add(() => this.move(1),this)
+}
+character.prototype.audio_move = function() {
+
+this.sound_move.play()
+
 }
 
 
@@ -387,6 +393,7 @@ character.prototype.calculate_side = function() {
 
 character.prototype.repulse_to_right = function() {
 	if(this.flag_on_life){
+	this.audio_move()
 		if(this.flag_cant_moving==false){
 			console.log('little_effect')
 			this.flag_repulse_right && this.show_little_effect_left()
@@ -408,6 +415,7 @@ character.prototype.repulse_to_right = function() {
 
 character.prototype.repulse_to_left = function() {
 	if(this.flag_on_life){
+	this.audio_move()
 		if(this.flag_cant_moving==false){
 			console.log('little_effect_left')
 			this.flag_repulse_left && this.show_little_effect_right()
@@ -521,20 +529,6 @@ character.prototype.random_effect=function(){
 				this.jump_enerve()
 				break
 			default:
-				//this.fl	break
-			case 9:
-				this.flag_cant_moving=false
-				this.move_to_center(this.little)
-				break
-			case 10:
-				this.move(0)
-				this.jump_enerve()
-				break
-			case 11:
-				this.move(0)
-				this.jump_enerve()
-				break
-			default:
 				//this.flag_cant_moving=false
 				//this.move_to_center(this.multiple)
 				//break
@@ -543,14 +537,6 @@ character.prototype.random_effect=function(){
 	}
 }
 
-character.prototype.move_to_center = function(next_function){
-	this.tween_move_to_centag_cant_moving=false
-				//this.move_to_center(this.multiple)
-				//break
-				this.move(0)
-		}
-	}
-}
 
 character.prototype.move_to_center = function(next_function){
 	this.tween_move_to_center=game.add.tween(this).to({x:w2,y:h2+25},this.time_move_to_center,Phaser.Easing.Linear.None,true,0)
@@ -649,8 +635,8 @@ character.prototype.update=function(){
 
 
 character.prototype.flash_activate=function(){
-this.tween_flash = game.add.tween(this.flash).to({alpha:1},100,Phaser.Easing.Bounce.Out,true,0)
-this.tween_flash.yoyo(100,true)
+	this.tween_flash = game.add.tween(this.flash).to({alpha:1},100,Phaser.Easing.Bounce.Out,true,0)
+	this.tween_flash.yoyo(100,true)
 }
 
 character.prototype.die = function() {
@@ -760,7 +746,8 @@ character.prototype.flag_on_life_off = function() {
 var bootstate= {
 	preload: function(){
 		console.log("%cStarting minimalistic game", "color:white; background:red");
-		this.stage.backgroundColor = "#250f2e"
+		this.stage.backgroundColor = "0x000000"
+		//this.stage.backgroundColor = "0x250f2e"
 		this.load.image('particle_player','assets/particle_player.png')
 		this.load.image('studio','assets/studio.png')
 		this.load.image("loading","assets/loading.png"); 
@@ -782,6 +769,8 @@ var preloadstate = {
 		var loadingBar = this.add.sprite(w2,h2,"loading");
 		loadingBar.anchor.setTo(0.5,0.5);
 		this.load.setPreloadSprite(loadingBar);
+		//audio_move
+		this.game.load.audio("sound_move","sounds/move.ogg");
 		//images
 		this.game.load.image("filter","assets/filter.png");
 		this.game.load.image("effect","assets/effect.png");
@@ -817,7 +806,7 @@ var game_first_screen = {
 		game.time.events.add( 2000,() => this.opponent2.button_move(0),this.opponent2 )
 		game.time.events.add( 8000,() => game.state.start('game_state',game_state))
 		this.filter=game.add.sprite(0,0,'filter')
-		this.filter.alpha=0.25
+		this.filter.alpha=0.00
 	},
 }
 
@@ -828,7 +817,7 @@ var game_state = {
 		game.add.existing(this.game)
 		//this.game.alpha=.8
 		this.filter=game.add.sprite(0,0,'filter')
-		this.filter.alpha=0.25
+		this.filter.alpha=0.00
 	},
 }
 
