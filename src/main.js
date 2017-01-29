@@ -366,18 +366,20 @@ character.prototype.move = function(side) {
 	if(this.tween_exist==false){
 		this.tween_exist=true
 		if(side==0 && this.flag_cant_moving){
+			this.audio_move()
 			console.log('move0')
 			this.time_move=game.rnd.integerInRange(500,2000)
 			this.calculate_side()
-			this.tween_characteristic = game.add.tween(this).to({x:this.sidex,y:h2+25},this.time_move,Phaser.Easing.Linear.None,true,0)
+			this.tween_characteristic = game.add.tween(this).to({x:this.sidex,y:h2+25},this.time_move,Phaser.Easing.Circular.Out,true,0)
 			this.tween_characteristic.onComplete.add(function(){this.tween_exist=false ; console.log('msg') ; this.move(0)},this)
 		}else if(side==1 && this.flag_cant_moving==false) {
+			this.audio_move()
 			this.tween_move_1_exist=true
 			console.log('move1')
 			var chosen_value = Math.random() < 0.5 ? 0 : w;
 			this.flag_cant_moving_on()
 			//this.time_move_to_an_opposite_direction=game.rnd.integerInRange(400,800)
-			this.tween_characteristic=game.add.tween(this).to({x:chosen_value},this.time_move_to_an_opposite_direction,Phaser.Easing.Linear.None,true,0)
+			this.tween_characteristic=game.add.tween(this).to({x:chosen_value},this.time_move_to_an_opposite_direction,Phaser.Easing.Circular.Out,true,0)
 			this.tween_exist=true
 		}
 	}
@@ -393,7 +395,6 @@ character.prototype.calculate_side = function() {
 
 character.prototype.repulse_to_right = function() {
 	if(this.flag_on_life){
-	this.audio_move()
 		if(this.flag_cant_moving==false){
 			console.log('little_effect')
 			this.flag_repulse_right && this.show_little_effect_left()
@@ -415,7 +416,6 @@ character.prototype.repulse_to_right = function() {
 
 character.prototype.repulse_to_left = function() {
 	if(this.flag_on_life){
-	this.audio_move()
 		if(this.flag_cant_moving==false){
 			console.log('little_effect_left')
 			this.flag_repulse_left && this.show_little_effect_right()
@@ -753,7 +753,7 @@ var bootstate= {
 		this.load.image("loading","assets/loading.png"); 
 	},
 	create: function(){
-		this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
+		this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
 		//this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
 		this.scale.pageAlignHorizontally = true
 		this.scale.pageAlignVertically = true
