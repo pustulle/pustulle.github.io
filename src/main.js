@@ -1,3 +1,13 @@
+//(function(){
+//	var game = document.getElementById('game'),
+//		context=game.getContext('2d');
+//	window.addEventListener('resize',resizeCanvas,false)
+//
+//game.width=window.innerWidth	
+//game.height=window.innerHeight	
+//	
+//	
+	
 var ratio_device=window.screen.height/window.screen.width
 var h=1280*ratio_device
 var w=1280
@@ -111,9 +121,10 @@ character = function(){
 	this.flag_enerve=true
 	this.flag_on_life=true
 	this.flag_cant_moving=true
-	this.time_repulse=40
+	//this.time_repulse=40
+	this.time_repulse=80
 	this.time_move_to_center=400
-	this.time_move_to_an_opposite_direction=800
+	this.time_move_to_an_opposite_direction=1200
 	this.time_enerve=400
 	this.count_for_die=3
 	//TODO
@@ -754,7 +765,7 @@ character.prototype.flag_on_life_off = function() {
 var bootstate= {
 	preload: function(){
 		console.log("%cStarting minimalistic game", "color:white; background:red");
-		this.stage.backgroundColor = "0x000000"
+		this.stage.backgroundColor = "0x250f2e"
 		//this.stage.backgroundColor = "0x250f2e"
 		this.load.image('particle_player','assets/particle_player.png')
 		this.load.image('studio','assets/studio.png')
@@ -816,6 +827,7 @@ var game_first_screen = {
 		game.time.events.add( 8000,() => game.state.start('game_state',game_state))
 		this.filter=game.add.sprite(0,0,'filter')
 		this.filter.alpha=0.00
+		this.stage.backgroundColor = "0x250f2e"
 	},
 }
 
@@ -827,6 +839,7 @@ var game_state = {
 		//this.game.alpha=.8
 		this.filter=game.add.sprite(0,0,'filter')
 		this.filter.alpha=0.00
+		this.stage.backgroundColor = "0x250f2e"
 	},
 }
 
@@ -836,4 +849,7 @@ game.state.add('boot',bootstate)
 game.state.add('preload',preloadstate)
 game.state.add('game_first_screen',game_first_screen)
 game.state.add('game_state',game_state)
+
 game.state.start('boot',bootstate)
+//	}
+//})()
