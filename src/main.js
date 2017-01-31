@@ -46,7 +46,7 @@
 			this.ghost_player.on=true
 			this.ghost_player.start(true,20,20)
 			this.fall_jump()
-			this.title_game = game.add.bitmapText(w2,h2,"lucky_yellow",'RETROSCAPE',20)
+			this.title_game = game.add.bitmapText(w2,h2,"lucky_yellow",'dotscape',20)
 			this.title_game.flag_drag=true
 			this.title_game.flag_drag && this.allow_drag(this.title_game)
 			this.title_game.anchor.setTo(.5,.5)
@@ -113,7 +113,7 @@
 			this.flag_on_life=true
 			this.flag_cant_moving=true
 			//this.time_repulse=40
-			this.time_repulse=80
+			this.time_repulse=180
 			this.time_move_to_center=400
 			this.time_move_to_an_opposite_direction=1200
 			this.time_enerve=400
@@ -145,7 +145,7 @@
 			this.ghost_player.minRotation = 0
 			this.ghost_player.maxRotation = 0
 			this.ghost_player.on=true
-			this.ghost_player.start(true,20,20)
+			this.ghost_player.start(true,400,200)
 
 			this.score = game.add.bitmapText(w2,h-200,'lucky',"400",60)
 			this.number=10
@@ -159,6 +159,8 @@
 			this.life.anchor.setTo(.5,.5)
 			this.sound_move=game.add.audio('sound_move')
 			this.sound_repulse=game.add.audio('repulse')
+			this.sound_repulse_little=game.add.audio('repulse_little')
+			this.sound_die=game.add.audio('die')
 		} 
 
 		character.prototype = Object.create(Phaser.Sprite.prototype)
@@ -190,7 +192,13 @@
 			this.tween_enerve1=game.add.tween(this.scale).to({x:2,y:.3},550,Phaser.Easing.Linear.None,true,0)
 			this.tween_enerve2=game.add.tween(this.scale).to({x:1.2,y:1.2},550,Phaser.Easing.Elastic.Out,true,550)
 			this.tween_enerve3=game.add.tween(this).to({y:-200},750,Phaser.Easing.Quartic.In,true,150)
+			this.chooce_enerve_position=game.rnd.integerInRange(0,1)
+			if(this.chooce_enerve_position==1){
 			this.tween_enerve4=game.add.tween(this).to({y:420,x:300},4050,Phaser.Easing.Linear.None)
+			}else{
+			this.tween_enerve4=game.add.tween(this).to({y:420,x:800},4050,Phaser.Easing.Linear.None)
+			
+			}
 			this.tween_enerve3bis=game.add.tween(this.scale).to({x:1,y:1.4},250,Phaser.Easing.Elastic.Out,true,550)
 			this.tween_enerve4bis=game.add.tween(this.scale).to({x:1.6,y:.8},150,Phaser.Easing.Elastic.Out,true,950)
 			//this.tween_enerve5=game.add.tween(this.scale).to({x:1,y:1},550,Phaser.Easing.Elastic.Out)
@@ -365,7 +373,17 @@
 			this.sound_repulse.play()
 
 		}
+		character.prototype.audio_repulse_little = function() {
 
+			this.sound_repulse_little.play()
+
+		}
+
+		character.prototype.audio_die = function() {
+
+			this.sound_die.play()
+
+		}
 
 
 		//si 0 processus normal si 1 random side
@@ -403,12 +421,13 @@
 
 		character.prototype.repulse_to_right = function() {
 			if(this.flag_on_life){
-				this.audio_repulse()
 				if(this.flag_cant_moving==false){
+				this.audio_repulse_little()
 					console.log('little_effect')
 					this.flag_repulse_right && this.show_little_effect_left()
 				}else if(this.flag_cant_moving==true){
 					if(this.flag_repulse_right){
+				this.audio_repulse()
 						this.show_effect_left()
 						if (this.x > this.button1.x && this.x < 500) {
 							console.log('repulse_to_right')
@@ -425,15 +444,16 @@
 
 		character.prototype.repulse_to_left = function() {
 			if(this.flag_on_life){
-				this.audio_repulse()
 				if(this.flag_cant_moving==false){
 					console.log('little_effect_left')
+				this.audio_repulse_little()
 					this.flag_repulse_left && this.show_little_effect_right()
 
 				}else if(this.flag_cant_moving==true){
 					if(this.flag_repulse_left){
 						this.show_effect_right()
 						if (this.x < this.button2.x && this.x > w-500) {
+				this.audio_repulse()
 							console.log('repulse_to_left')
 							this.flag_repulse_left=false
 							this.tween_exist && this.stop_move()	
@@ -539,10 +559,12 @@
 						this.jump_enerve()
 						break
 					default:
+						this.flag_cant_moving=false
+						this.move_to_center(this.enerve)
 						//this.flag_cant_moving=false
 						//this.move_to_center(this.multiple)
 						//break
-						this.move(0)
+						//this.move(0)
 				}
 			}
 		}
@@ -651,6 +673,7 @@
 
 		character.prototype.die = function() {
 			if(this.flag_on_life){
+				this.audio_die()
 				this.flag_on_life_off()
 				this.flag_cant_moving_off()
 				console.log('lifeenmoins')
@@ -667,6 +690,7 @@
 					game.time.events.add( 100,this.revive,this )
 				}else{
 					this.flash_activate()		
+					this.explode()
 					console.log('game_over')
 					this.reset_aspect_fake_square()	
 					this.game_over.visible=true
@@ -783,7 +807,9 @@
 				this.load.setPreloadSprite(loadingBar);
 				//audio_move
 				this.game.load.audio("sound_move","sounds/move.ogg");
+				this.game.load.audio("repulse_little","sounds/repulse_little.ogg");
 				this.game.load.audio("repulse","sounds/repulse.ogg");
+				this.game.load.audio("die","sounds/die.ogg");
 				//images
 				this.game.load.image("filter","assets/filter.png");
 				this.game.load.image("effect","assets/effect.png");
@@ -819,7 +845,7 @@
 				game.time.events.add( 2000,() => this.opponent2.button_move(0),this.opponent2 )
 				game.time.events.add( 8000,() => game.state.start('game_state',game_state))
 				this.filter=game.add.sprite(0,0,'filter')
-				this.filter.alpha=0.00
+				this.filter.alpha=1.00
 				this.stage.backgroundColor = "0x250f2e"
 			},
 		}
@@ -831,7 +857,7 @@
 				game.add.existing(this.game)
 				//this.game.alpha=.8
 				this.filter=game.add.sprite(0,0,'filter')
-				this.filter.alpha=0.00
+				this.filter.alpha=1.00
 				this.stage.backgroundColor = "0x250f2e"
 			},
 		}
