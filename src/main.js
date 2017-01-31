@@ -1,9 +1,6 @@
-		//var ratio_device=window.screen.height/window.screen.width
-		//var h=1280*ratio_device
-		//var w=1280
-		var w=window.innerWidth;
-
-		var h=window.innerHeight;
+		var ratio_device=window.screen.height/window.screen.width
+		var h=1280*ratio_device
+		var w=1280
 
 		var h2=h*.5
 		var w2=w*.5
@@ -768,6 +765,8 @@
 			create: function(){
 				this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
 				//this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
+				this.game.width=window.innerWidth
+				this.game.height=window.innerHeight
 				this.scale.pageAlignHorizontally = true
 				this.scale.pageAlignVertically = true
 				this.scale.refresh()
@@ -838,7 +837,7 @@
 		}
 
 		//game = new Phaser.Game(1280,1920,Phaser.CANVAS,'' )
-		game = new Phaser.Game(w,h,Phaser.CANVAS,'game-area' )
+		game = new Phaser.Game(1280,h,Phaser.CANVAS,'game' )
 		game.state.add('boot',bootstate)
 		game.state.add('preload',preloadstate)
 		game.state.add('game_first_screen',game_first_screen)
