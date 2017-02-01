@@ -35,7 +35,7 @@
 			this.anchor.setTo(.5,.5)
 			this.visible=true
 			this.ghost_player = game.add.emitter(this.x, this.y-25, 3)
-			this.ghost_player.makeParticles("rect_l")
+			this.ghost_player.makeParticles("rect")
 			this.ghost_player.setXSpeed(0,0)
 			this.ghost_player.setYSpeed(0,0)
 			this.ghost_player.minParticleAlpha=.2
@@ -136,7 +136,7 @@
 
 			this.random_list=[1,2,3,4,5,6]
 			this.ghost_player = game.add.emitter(this.x, this.y-25, 3)
-			this.ghost_player.makeParticles("rect_l")
+			this.ghost_player.makeParticles("particle_rect")
 			this.ghost_player.setXSpeed(0,0)
 			this.ghost_player.setYSpeed(0,0)
 			this.ghost_player.minParticleAlpha=.2
@@ -783,7 +783,6 @@
 				this.stage.backgroundColor = "0x250f2e"
 				//this.stage.backgroundColor = "0x250f2e"
 				this.load.image('particle_player','assets/particle_player.png')
-				this.load.image('studio','assets/studio.png')
 				this.load.image("loading","assets/loading.png"); 
 			},
 			create: function(){
@@ -801,7 +800,6 @@
 		var preloadstate = {
 			preload: function(){ 
 				//loadingBar
-				var studio= this.add.sprite(w2,880,'studio')
 				var loadingBar = this.add.sprite(w2,h2,"loading");
 				loadingBar.anchor.setTo(0.5,0.5);
 				this.load.setPreloadSprite(loadingBar);
@@ -813,7 +811,7 @@
 				//images
 				this.game.load.image("filter","assets/filter.png");
 				this.game.load.image("effect","assets/effect.png");
-				this.game.load.image("rect_l","assets/rect_l.png");
+				this.game.load.image("particle_rect","assets/particle_rect.png");
 				this.game.load.image("rect","assets/rect.png");
 				this.game.load.image("button","assets/button.png");
 				this.game.load.image("background","assets/background.png");
@@ -843,7 +841,7 @@
 				this.opponent2=new opponent()
 				game.add.existing(this.opponent2)
 				game.time.events.add( 2000,() => this.opponent2.button_move(0),this.opponent2 )
-				game.time.events.add( 8000,() => game.state.start('game_state',game_state))
+				game.time.events.add( 6500,() => game.state.start('game_state',game_state))
 				this.filter=game.add.sprite(0,0,'filter')
 				this.filter.alpha=1.00
 				this.stage.backgroundColor = "0x250f2e"
