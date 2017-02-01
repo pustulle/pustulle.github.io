@@ -113,9 +113,9 @@
 			this.flag_on_life=true
 			this.flag_cant_moving=true
 			//this.time_repulse=40
-			this.time_repulse=180
+			this.time_repulse=140
 			this.time_move_to_center=400
-			this.time_move_to_an_opposite_direction=1200
+			this.time_move_to_an_opposite_direction=1400
 			this.time_enerve=400
 			this.count_for_die=3
 			//TODO
@@ -145,7 +145,7 @@
 			this.ghost_player.minRotation = 0
 			this.ghost_player.maxRotation = 0
 			this.ghost_player.on=true
-			this.ghost_player.start(true,400,200)
+			this.ghost_player.start(true,100,20)
 
 			this.score = game.add.bitmapText(w2,h-200,'lucky',"400",60)
 			this.number=10
@@ -394,7 +394,7 @@
 				if(side==0 && this.flag_cant_moving){
 					this.audio_move()
 					console.log('move0')
-					this.time_move=game.rnd.integerInRange(500,2000)
+					this.time_move=game.rnd.integerInRange(300,800)
 					this.calculate_side()
 					this.tween_characteristic = game.add.tween(this).to({x:this.sidex,y:h2+25},this.time_move,Phaser.Easing.Circular.Out,true,0)
 					this.tween_characteristic.onComplete.add(function(){this.tween_exist=false ; console.log('msg') ; this.move(0)},this)
@@ -414,9 +414,8 @@
 		character.prototype.calculate_side = function() {
 			this.random=game.rnd.integerInRange(0,5)
 			if (this.random < 4){
-				this.sidex=1000*(Math.random(0,w))
-			}else{
-				this.sidex=Math.random() < 0.5 ? 0 : w	}
+				this.sidex=1000*(Math.random(400,w-400))
+			}
 		}
 
 		character.prototype.repulse_to_right = function() {
@@ -507,7 +506,7 @@
 		character.prototype.random_effect=function(){
 			if(this.flag_cant_moving && this.tween_move_1_exist==false){
 				console.log('activate')
-				this.random_effect_generate=game.rnd.integerInRange(0,18)
+				this.random_effect_generate=game.rnd.integerInRange(0,28)
 				console.log(this.random_effect_generate);
 				switch(this.random_effect_generate){
 					case 0:
@@ -733,7 +732,7 @@
 		character.prototype.restart = function() {
 			if(this.flag_restart){
 				this.flag_restart=false
-				game.state.start('boot',bootstate)
+				game.state.start('game_state',game_state)
 			}
 		}
 
