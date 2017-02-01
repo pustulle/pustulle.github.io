@@ -559,12 +559,7 @@
 						this.jump_enerve()
 						break
 					default:
-						this.flag_cant_moving=false
-						this.move_to_center(this.enerve)
-						//this.flag_cant_moving=false
-						//this.move_to_center(this.multiple)
-						//break
-						//this.move(0)
+						this.move(0)
 				}
 			}
 		}
