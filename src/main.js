@@ -104,8 +104,8 @@
 
 			this.leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
 			this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-			this.flag_repulse_right=true
-			this.flag_repulse_left=true
+			this.flag_repulse=true
+			//this.flag_repulse_left=true
 			this.flag_effect=true
 			this.tween_exist=false
 			this.tween_move_1_exist=false
@@ -113,13 +113,14 @@
 			this.flag_on_life=true
 			this.flag_cant_moving=true
 			//this.time_repulse=40
-			this.time_repulse=140
+			this.time_repulse=80
 			this.time_move_to_center=400
 			this.time_move_to_an_opposite_direction=1400
 			this.time_enerve=400
 			this.count_for_die=3
+			this.random_value=game.rnd.integerInRange(-20,20)
 			//TODO
-			game.time.events.add( 1000,() => this.move(0),this )
+			game.time.events.add( 2000,() => this.move(0),this )
 			this.button1=game.add.button(100,h2,'button',this.repulse_to_right,this)
 			this.button1.anchor.setTo(.5,.5)
 			this.button1.effect=game.add.sprite(0,0,'effect')
@@ -135,17 +136,29 @@
 			this.button3.alpha=0
 
 			this.random_list=[1,2,3,4,5,6]
-			this.ghost_player = game.add.emitter(this.x, this.y-25, 3)
-			this.ghost_player.makeParticles("particle_rect")
+			this.ghost_player = game.add.emitter(this.x, this.y-15, 3)
+			this.ghost_player.makeParticles("rect")
 			this.ghost_player.setXSpeed(0,0)
 			this.ghost_player.setYSpeed(0,0)
-			this.ghost_player.minParticleAlpha=.2
+			this.ghost_player.minParticleAlpha=.1
 			this.ghost_player.minParticleScale = 1
 			this.ghost_player.maxParticleScale = 1
 			this.ghost_player.minRotation = 0
 			this.ghost_player.maxRotation = 0
 			this.ghost_player.on=true
-			this.ghost_player.start(true,100,20)
+			this.ghost_player.start(true,60,80)
+
+//			this.ghost_player = game.add.emitter(this.x, this.y-25, 3)
+//			this.ghost_player.makeParticles("particle_rect")
+//			this.ghost_player.setXSpeed(0,0)
+//			this.ghost_player.setYSpeed(0,0)
+//			this.ghost_player.minParticleAlpha=.2
+//			this.ghost_player.minParticleScale = 1
+//			this.ghost_player.maxParticleScale = 1
+//			this.ghost_player.minRotation = 0
+//			this.ghost_player.maxRotation = 0
+//			this.ghost_player.on=true
+//			this.ghost_player.start(true,100,20)
 
 			this.score = game.add.bitmapText(w2,h-200,'lucky',"400",60)
 			this.number=10
@@ -394,17 +407,18 @@
 				if(side==0 && this.flag_cant_moving){
 					this.audio_move()
 					console.log('move0')
-					this.time_move=game.rnd.integerInRange(300,800)
+					this.time_move=game.rnd.integerInRange(300,500)
 					this.calculate_side()
-					this.tween_characteristic = game.add.tween(this).to({x:this.sidex,y:h2+25},this.time_move,Phaser.Easing.Circular.Out,true,0)
-					this.tween_characteristic.onComplete.add(function(){this.tween_exist=false ; console.log('msg') ; this.move(0)},this)
+					this.tween_characteristic = game.add.tween(this).to({x:this.sidex+this.random_value,y:h2+25},this.time_move,Phaser.Easing.Circular.Out,true,0)
+
+					this.tween_characteristic.onComplete.add(function(){this.tween_exist=false ; console.log('msg')},this)
+					this.tween_characteristic.onComplete.add(function(){this.move(0)},this)
 				}else if(side==1 && this.flag_cant_moving==false) {
 					this.audio_move()
 					this.tween_move_1_exist=true
 					console.log('move1')
 					var chosen_value = Math.random() < 0.5 ? 0 : w;
 					this.flag_cant_moving_on()
-					//this.time_move_to_an_opposite_direction=game.rnd.integerInRange(400,800)
 					this.tween_characteristic=game.add.tween(this).to({x:chosen_value},this.time_move_to_an_opposite_direction,Phaser.Easing.Circular.Out,true,0)
 					this.tween_exist=true
 				}
@@ -414,7 +428,9 @@
 		character.prototype.calculate_side = function() {
 			this.random=game.rnd.integerInRange(0,5)
 			if (this.random < 4){
-				this.sidex=1000*(Math.random(400,w-400))
+				this.sidex=game.rnd.integerInRange(200,w-200)
+				this.random_value=game.rnd.integerInRange(-20,20)
+				console.log('this.sidex',this.sidex)
 			}
 		}
 
@@ -423,18 +439,18 @@
 				if(this.flag_cant_moving==false){
 				this.audio_repulse_little()
 					console.log('little_effect')
-					this.flag_repulse_right && this.show_little_effect_left()
+					this.flag_repulse && this.show_little_effect_left()
 				}else if(this.flag_cant_moving==true){
-					if(this.flag_repulse_right){
+					if(this.flag_repulse){
 				this.audio_repulse()
 						this.show_effect_left()
 						if (this.x > this.button1.x && this.x < 500) {
 							console.log('repulse_to_right')
-							this.flag_repulse_right=false
+							this.flag_repulse=false
 							this.tween_exist && this.stop_move()	
 							this.tween_repulse_to_right = game.add.tween(this).to({x:800,y:h2+25},this.time_repulse,Phaser.Easing.Linear.None,true,0)
-							this.tween_repulse_to_right1 = game.add.tween(this.scale).to({x:2.5},this.time_repulse,Phaser.Easing.Linear.None,true,0)
-							this.tween_repulse_to_right.onComplete.add(this.flag_repulse_right_on,this)
+							this.tween_repulse_to_right1 = game.add.tween(this.scale).to({x:2.8},this.time_repulse,Phaser.Easing.Linear.None,true,0)
+							this.tween_repulse_to_right.onComplete.add(this.flag_repulse_on,this)
 						}
 					}
 				}
@@ -446,19 +462,19 @@
 				if(this.flag_cant_moving==false){
 					console.log('little_effect_left')
 				this.audio_repulse_little()
-					this.flag_repulse_left && this.show_little_effect_right()
+					this.flag_repulse && this.show_little_effect_right()
 
 				}else if(this.flag_cant_moving==true){
-					if(this.flag_repulse_left){
+					if(this.flag_repulse){
 						this.show_effect_right()
 						if (this.x < this.button2.x && this.x > w-500) {
 				this.audio_repulse()
 							console.log('repulse_to_left')
-							this.flag_repulse_left=false
+							this.flag_repulse=false
 							this.tween_exist && this.stop_move()	
 							this.tween_repulse_to_left = game.add.tween(this).to({x:w-800,y:h2+25},this.time_repulse,Phaser.Easing.Linear.None,true,0)
-							this.tween_repulse_to_left1 = game.add.tween(this.scale).to({x:2.5},this.time_repulse,Phaser.Easing.Linear.None,true,0)
-							this.tween_repulse_to_left.onComplete.add(this.flag_repulse_left_on,this)
+							this.tween_repulse_to_left1 = game.add.tween(this.scale).to({x:2.8},this.time_repulse,Phaser.Easing.Linear.None,true,0)
+							this.tween_repulse_to_left.onComplete.add(this.flag_repulse_on,this)
 						}
 					}
 				}
@@ -489,7 +505,7 @@
 				this.tween_effect3=game.add.tween(this.button2.effect).to({alpha:.1},this.time_repulse,Phaser.Easing.Bounce.Out,true,0)
 				this.tween_effect3.yoyo(this.time_repulse,true)
 				this.tween_effect3.onComplete.add(this.flag_effect_on,this)
-				this.tween_effect3.onComplete.add(this.flag_repulse_right_on,this)
+				this.tween_effect3.onComplete.add(this.flag_repulse_on,this)
 			}
 		}
 
@@ -499,7 +515,7 @@
 				this.tween_effect4=game.add.tween(this.button1.effect).to({alpha:.1},this.time_repulse,Phaser.Easing.Bounce.Out,true,0)
 				this.tween_effect4.yoyo(this.time_repulse,true)
 				this.tween_effect4.onComplete.add(this.flag_effect_on,this)
-				this.tween_effect4.onComplete.add(this.flag_repulse_left_on,this)
+				this.tween_effect4.onComplete.add(this.flag_repulse_on,this)
 			}
 		}
 
@@ -578,14 +594,9 @@
 			this.flag_effect=true
 		}
 
-		character.prototype.flag_repulse_right_on = function() {
+		character.prototype.flag_repulse_on = function() {
 			this.flag_cant_moving && this.reset_aspect()
-			this.flag_repulse_right=true
-		}
-
-		character.prototype.flag_repulse_left_on = function() {
-			this.flag_cant_moving && this.reset_aspect()
-			this.flag_repulse_left=true
+			this.flag_repulse=true
 		}
 
 		character.prototype.reset_aspect_fake_square=function(){
@@ -622,7 +633,7 @@
 		}
 
 		character.prototype.update=function(){
-			this.ghost_player.y=this.y-25
+			this.ghost_player.y=this.y-15
 			this.ghost_player.x=this.x
 			//in case keyboard
 			if (this.rightKey.isDown){
@@ -704,7 +715,7 @@
 
 
 		character.prototype.explode=function(){
-			this.particle = game.add.emitter(this.x, this.y-28, 200)
+			this.particle = game.add.emitter(this.x, this.y-15, 200)
 			this.particle.makeParticles("rect")
 			this.particle.minParticleSpeed.setTo(-600,-600)
 			this.particle.maxParticleSpeed.setTo(800,800)
@@ -714,7 +725,7 @@
 			this.particle.minRotation = 0
 			this.particle.maxRotation = 0
 			this.particle.on=false
-			this.particle.start(true, 500,null,20)
+			this.particle.start(true,600,null,10)
 			this.ghost_player.on=false
 			this.ghost_player.visible=false
 		}
@@ -774,9 +785,8 @@
 		var bootstate= {
 			preload: function(){
 				console.log("%cStarting minimalistic game", "color:white; background:red");
-				this.stage.backgroundColor = "0x250f2e"
 				//this.stage.backgroundColor = "0x250f2e"
-				this.load.image('particle_player','assets/particle_player.png')
+				//this.stage.backgroundColor = "0x250f2e"
 				this.load.image("loading","assets/loading.png"); 
 			},
 			create: function(){
