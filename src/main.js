@@ -453,7 +453,7 @@
 							this.flag_repulse=false
 							this.tween_exist && this.stop_move()	
 							this.tween_repulse_to_right = game.add.tween(this).to({x:this.x+100,y:h2+25},this.time_repulse,Phaser.Easing.Linear.None,true,0)
-							this.tween_repulse_to_right1 = game.add.tween(this.scale).to({x:3.5},this.time_repulse,Phaser.Easing.Linear.None,true,0)
+							this.tween_repulse_to_right1 = game.add.tween(this.scale).to({x:1.5},this.time_repulse,Phaser.Easing.Linear.None,true,0)
 							this.tween_repulse_to_right.onComplete.add(this.flag_repulse_on,this)
 						//}
 					}
@@ -477,7 +477,7 @@
 							this.flag_repulse=false
 							this.tween_exist && this.stop_move()	
 							this.tween_repulse_to_left = game.add.tween(this).to({x:this.x-100,y:h2+25},this.time_repulse,Phaser.Easing.Linear.None,true,0)
-							this.tween_repulse_to_left1 = game.add.tween(this.scale).to({x:3.5},this.time_repulse,Phaser.Easing.Linear.None,true,0)
+							this.tween_repulse_to_left1 = game.add.tween(this.scale).to({x:1.5},this.time_repulse,Phaser.Easing.Linear.None,true,0)
 							this.tween_repulse_to_left.onComplete.add(this.flag_repulse_on,this)
 						//}
 					}
