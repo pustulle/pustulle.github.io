@@ -136,17 +136,17 @@
 			this.button3.alpha=0
 
 			this.random_list=[1,2,3,4,5,6]
-			//this.ghost_player = game.add.emitter(this.x, this.y-15, 3)
-			//this.ghost_player.makeParticles("particle_rect")
-			//this.ghost_player.setXSpeed(0,0)
-			//this.ghost_player.setYSpeed(0,0)
-			//this.ghost_player.minParticleAlpha=.1
-			//this.ghost_player.minParticleScale = 1
-			//this.ghost_player.maxParticleScale = 1
-			//this.ghost_player.minRotation = 0
-			//this.ghost_player.maxRotation = 0
-			//this.ghost_player.on=true
-			//this.ghost_player.start(true,60,80)
+			this.ghost_player = game.add.emitter(this.x, this.y-15, 30)
+			this.ghost_player.makeParticles("particle_rect")
+			this.ghost_player.setXSpeed(1,2)
+			this.ghost_player.setYSpeed(-10,10)
+			this.ghost_player.minParticleAlpha=.12
+			this.ghost_player.minParticleScale = .51
+			this.ghost_player.maxParticleScale = 6
+			this.ghost_player.minRotation = 0
+			this.ghost_player.maxRotation = 0
+			this.ghost_player.on=true
+			this.ghost_player.start(true,50,18)
 
 //			this.ghost_player = game.add.emitter(this.x, this.y-25, 3)
 //			this.ghost_player.makeParticles("particle_rect")
@@ -254,9 +254,9 @@
 		character.prototype.water = function() {
 			console.log("water");
 			//this.ghost_player.on=false
-			this.fake_square[1].scale.x=19
+			this.fake_square[1].scale.x=25
 			this.fake_square[1].alpha=.85
-			this.tween_water0=game.add.tween(this.fake_square[1].scale).to({y:8},850,Phaser.Easing.Bounce.Out,true,0)
+			this.tween_water0=game.add.tween(this.fake_square[1].scale).to({y:10},850,Phaser.Easing.Bounce.Out,true,0)
 			this.tween_water1=game.add.tween(this.fake_square[1].scale).to({y:0},450,Phaser.Easing.Bounce.In)
 			this.tween_water0.chain(this.tween_water1)
 			this.tween_water0.onComplete.add(() => this.move(1),this)
@@ -360,7 +360,7 @@
 		character.prototype.scale_y = function() {
 			console.log("scale_y");
 			//this.ghost_player.on=false
-			this.tween_scale_y0=game.add.tween(this.scale).to({y:10},950,Phaser.Easing.Bounce.In,true,0)
+			this.tween_scale_y0=game.add.tween(this.scale).to({y:15},950,Phaser.Easing.Bounce.In,true,0)
 			this.tween_scale_y0.onComplete.add(() => this.move(1),this)
 		}
 
@@ -409,21 +409,20 @@
 				if(side==0 && this.flag_cant_moving){
 					console.log('this.flag_cant_moving',this.flag_cant_moving)
 					console.log('move0')
-					this.time_move=game.rnd.integerInRange(300,500)
+					this.time_move=game.rnd.integerInRange(500,1500)
 				this.random_value=game.rnd.integerInRange(-90,90)
 				this.calculate_side()
 					this.tween_characteristic = game.add.tween(this).to({x:this.sidex+this.random_value,y:h2+25},this.time_move,Phaser.Easing.Circular.Out,true,0)
 
-					this.tween_characteristic.onStart.add(this.audio_move,this)
 					this.tween_characteristic.onComplete.add(function(){this.tween_exist=false},this)
 					this.tween_characteristic.onComplete.add(function(){this.flag_cant_moving=true},this)
 					this.tween_characteristic.onComplete.add(()=>this.move(0),this)
 				}else if(side==1 && this.flag_cant_moving==false) {
-					this.audio_move()
 					this.tween_move_1_exist=true
 					console.log('move1')
 					var chosen_value = Math.random() < 0.5 ? 0 : w;
 					this.flag_cant_moving_on()
+					this.time_move_to_an_opposite_direction=game.rnd.integerInRange(800,1500)
 					this.tween_characteristic=game.add.tween(this).to({x:chosen_value},this.time_move_to_an_opposite_direction,Phaser.Easing.Circular.Out,true,0)
 					this.tween_exist=true
 				}
@@ -646,12 +645,23 @@
 			}
 			if (this.flag_on_life){
 				if (this.x > w-300 && this.x < this.button2.x){
+					this.ghost_player.x=this.x
+					this.ghost_player.y=this.y-15
+					this.ghost_player.on=true
 					this.number++
 					this.score.text=this.number
+					this.audio_move()
 				}
 				if (this.x > this.button1.x && this.x < 300){
 					this.number++
 					this.score.text=this.number
+					this.ghost_player.x=this.x
+					this.ghost_player.y=this.y-15
+					this.ghost_player.on=true
+					this.audio_move()
+				}
+				if (this.x > 300 && this.x < w-300){
+					this.ghost_player.on=false
 				}
 			}
 
