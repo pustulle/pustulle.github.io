@@ -113,7 +113,7 @@
 			this.flag_on_life=true
 			this.flag_cant_moving=true
 			//this.time_repulse=40
-			this.time_repulse=40
+			this.time_repulse=140
 			this.time_move_to_center=400
 			this.time_move_to_an_opposite_direction=1400
 			this.time_enerve=400
@@ -433,7 +433,7 @@
 		character.prototype.calculate_side = function() {
 			//this.random=game.rnd.integerInRange(0,5)
 			//if (this.random < 4){
-				this.sidex=game.rnd.integerInRange(250,w-250)
+				this.sidex=game.rnd.integerInRange(0,w)
 				console.log('this.sidex',this.sidex)
 			//}
 		}
