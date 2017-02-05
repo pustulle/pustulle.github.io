@@ -116,7 +116,7 @@ this.flag_anim_button1=true
 this.flag_anim_button2=true
 	this.tween_move1_dont_exist=true
 	//this.time_repulse=40
-	this.time_repulse=200
+	this.time_repulse=100
 	//this.time_repulse=140
 	this.time_move_to_center=400
 	this.time_move_to_an_opposite_direction=1400
@@ -148,7 +148,7 @@ this.button2.tint=this.rose
 	this.ghost_player.setYSpeed(-10,10)
 	this.ghost_player.minParticleAlpha=.12
 	this.ghost_player.minParticleScale = .51
-	this.ghost_player.maxParticleScale = 6
+	this.ghost_player.maxParticleScale = 4
 	this.ghost_player.minRotation = 0
 	this.ghost_player.maxRotation = 0
 	this.ghost_player.on=true
@@ -413,16 +413,15 @@ character.prototype.move = function(side) {
 	if(this.tween_exist==false && this.flag_on_life){
 		if(side==0 && this.tween_move1_dont_exist && this.tween_exist==false){
 			console.log('move0')
-			this.tween_exist=true
 			this.calculate_side()
-			this.flag_on_life && this.move0()
+			this.move0()
 		}else if(side==1 && this.tween_move1_dont_exist==false && this.tween_exist==false) {
 			this.tween_move1_dont_exist=true
 			this.tween_exist=true
 			this.reset_button_color()
 			console.log('move1')
 			var chosen_value = Math.random() < 0.5 ? 0 : w;
-			this.time_move_to_an_opposite_direction=game.rnd.integerInRange(800,1500)
+			this.time_move_to_an_opposite_direction=game.rnd.integerInRange(1200,1800)
 			this.tween_characteristic=game.add.tween(this).to({x:chosen_value},this.time_move_to_an_opposite_direction,Phaser.Easing.Circular.Out,true,0)
 		}
 
@@ -437,9 +436,10 @@ character.prototype.reset_button_color = function() {
 }
 
 character.prototype.move0 = function() {
+	this.calculate_side()
 	this.tween_exist=true
 	console.log('move0000')
-	this.calculate_side()
+	console.log('this.time_move',this.time_move)
 			this.tween_characteristic = game.add.tween(this).to({x:this.sidex+this.random_value,y:h2+25},this.time_move,Phaser.Easing.Circular.Out,true,0)
 
 			this.tween_characteristic.onComplete.add(this.move0_reset,this)
@@ -447,15 +447,13 @@ character.prototype.move0 = function() {
 
 character.prototype.move0_reset = function() {
 	console.log('reset')
-	this.tween_move1_dont_exist=true
 	this.tween_exist=false	
-			this.flag_on_life && this.move0()
+			!this.tween_exist && this.tween_move1_dont_exist && this.flag_on_life && this.move(0)
 }
 
 
 character.prototype.calculate_side = function() {
-	this.time_move=game.rnd.integerInRange(800,1500)
-	console.log('this.time_move',this.time_move)
+	this.time_move=game.rnd.integerInRange(1200,1500)
 	this.random=game.rnd.integerInRange(0,5)
 		switch(this.random){
 			case 0:
@@ -495,7 +493,6 @@ character.prototype.calculate_side = function() {
 	this.random_value=game.rnd.integerInRange(-90,90)
 	this.sidex=game.rnd.integerInRange(0,w)
 		}
-	console.log('this.sidex',this.sidex)
 	//}
 }
 
@@ -663,6 +660,7 @@ character.prototype.random_effect=function(){
 				this.jump_enerve()
 				break
 			default:
+				console.log('default')
 				//this.tween_move1_dont_exist=false
 				//this.move_to_center(this.big)
 				this.move(0)
@@ -706,7 +704,7 @@ character.prototype.reset_aspect_fake_square=function(){
 character.prototype.reset_aspect=function(){
 	if(this.game_over.visible==false){
 	console.log('reset_aspect')
-	this.tween_reset_aspect=game.add.tween(this.scale).to({x:1,y:1},800,Phaser.Easing.Elastic.Out,true,0)
+	this.tween_reset_aspect=game.add.tween(this.scale).to({x:1,y:1},400,Phaser.Easing.Elastic.Out,true,0)
 	this.reset_aspect_fake_square()	
 	this.tween_reset_aspect.onComplete.add(this.random_effect,this)
 	this.alpha=1
@@ -866,7 +864,7 @@ character.prototype.revive = function() {
 	this.tween_revive.onComplete.add(this.flag_on_life_on,this)
 	this.tween_revive.onComplete.add(this.tween_move1_dont_exist_on,this)
 	this.tween_revive.onComplete.add(function(){this.tween_exist=false})
-	this.tween_revive.onComplete.add(() => this.move(0),this)
+	this.tween_revive.onComplete.add(this.move0,this)
 	}
 }
 character.prototype.hide_particle = function() {
