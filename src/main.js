@@ -455,6 +455,7 @@ character.prototype.move0_reset = function() {
 
 character.prototype.calculate_side = function() {
 	this.time_move=game.rnd.integerInRange(800,1500)
+	console.log('this.time_move',this.time_move)
 	this.random=game.rnd.integerInRange(0,5)
 		switch(this.random){
 			case 0:
@@ -610,7 +611,7 @@ character.prototype.random_effect=function(){
 	console.log('this.tween_exist',this.tween_exist)
 	if(this.tween_move1_dont_exist && this.tween_exist==false){
 		console.log('activate')
-		this.random_effect_generate=game.rnd.integerInRange(0,12)
+		this.random_effect_generate=game.rnd.integerInRange(0,192)
 		console.log(this.random_effect_generate);
 		switch(this.random_effect_generate){
 			case 0:
@@ -662,9 +663,9 @@ character.prototype.random_effect=function(){
 				this.jump_enerve()
 				break
 			default:
-				this.tween_move1_dont_exist=false
-				this.move_to_center(this.big)
-				//this.move(0)
+				//this.tween_move1_dont_exist=false
+				//this.move_to_center(this.big)
+				this.move(0)
 		}
 	}
 }
@@ -796,12 +797,12 @@ character.prototype.die = function() {
 			this.alpha=.1
 			this.revive()
 		}else{
+			console.log('game_over')
 			this.tween_revive.stop()
 			this.tween_revive2.stop()
 			this.visible=false
 			this.flash_activate()		
 			this.explode()
-			console.log('game_over')
 			this.reset_aspect_fake_square()	
 			this.game_over.visible=true
 			this.ghost_player.visible=false
@@ -851,6 +852,7 @@ character.prototype.restart = function() {
 }
 
 character.prototype.revive = function() {
+	if(this.game_over.visible==false){
 	console.log("revive");
 	this.reset_aspect_fake_square()
 	this.tween_reset_aspect=game.add.tween(this.scale).to({x:1,y:1},900,Phaser.Easing.Elastic.Out,true,0)
@@ -865,7 +867,7 @@ character.prototype.revive = function() {
 	this.tween_revive.onComplete.add(this.tween_move1_dont_exist_on,this)
 	this.tween_revive.onComplete.add(function(){this.tween_exist=false})
 	this.tween_revive.onComplete.add(() => this.move(0),this)
-
+	}
 }
 character.prototype.hide_particle = function() {
 	this.particle.visible=false	
